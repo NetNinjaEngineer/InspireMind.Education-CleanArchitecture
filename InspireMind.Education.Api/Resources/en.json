@@ -1,0 +1,11 @@
+{
+  "maximumLength50": "{0} must be no more than 50 characters long.",
+  "resourceNotFound": "Resource not found.",
+  "topicNotFoundMessage": "The topic with id: '{0}' was not found.",
+  "courseNotFoundMessage": "The course with id: '{0}' was not found.",
+  "validationErrors": "Validation errors occured !!!",
+  "notEmpty": "{0} cannot be empty.",
+  "notNull": "{0} is required.",
+  "courseDurationGreaterThanZero": "Duration must be greater than zero",
+  "courseDurationRequired": "Duration is required"
+}

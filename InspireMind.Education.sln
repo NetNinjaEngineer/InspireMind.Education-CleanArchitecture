@@ -1,0 +1,86 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6703D8AA-F4D2-48BA-8000-E36E489FBD6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{96020155-E167-49BD-B497-DC9077D63167}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{790A537B-B7BA-4A77-961E-87577ED649BA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{A1134651-C180-496A-984A-5DA755E5F54C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{8AEA1A8B-E0C0-41D6-8B9B-503A2C3C9C3E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{A8A70176-2702-4FB5-A37D-793CDEC5E9E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InspireMind.Education.MVC", "InspireMind.Education.MVC\InspireMind.Education.MVC.csproj", "{BADA8055-42A0-4E4D-B6C3-E1E797B01CE3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InspireMind.Education.Infrastructure", "InspireMind.Education.Infrastructure\InspireMind.Education.Infrastructure.csproj", "{53C050AB-84F8-4118-A485-EB9F6FB0BAE8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InspireMind.Education.Persistence", "InspireMind.Education.Persistence\InspireMind.Education.Persistence.csproj", "{B8E1BC98-32C9-4592-8FC7-A64868C51D14}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InspireMind.Education.Identity", "InspireMind.Education.Identity\InspireMind.Education.Identity.csproj", "{26C4141E-F4DD-4795-9CD6-06619F3B26A2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InspireMind.Education.Domain", "InspireMind.Education.Domain\InspireMind.Education.Domain.csproj", "{06649D32-AB49-4A03-9CAB-78DE48A51003}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InspireMind.Education.Application", "InspireMind.Education.Application\InspireMind.Education.Application.csproj", "{FD79BD89-4F4A-4173-9B27-850FC5830DDB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InspireMind.Education.Api", "InspireMind.Education.Api\InspireMind.Education.Api.csproj", "{CBF2ABC4-2B0F-453A-854F-66CFB8606233}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BADA8055-42A0-4E4D-B6C3-E1E797B01CE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BADA8055-42A0-4E4D-B6C3-E1E797B01CE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BADA8055-42A0-4E4D-B6C3-E1E797B01CE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BADA8055-42A0-4E4D-B6C3-E1E797B01CE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53C050AB-84F8-4118-A485-EB9F6FB0BAE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53C050AB-84F8-4118-A485-EB9F6FB0BAE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53C050AB-84F8-4118-A485-EB9F6FB0BAE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53C050AB-84F8-4118-A485-EB9F6FB0BAE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8E1BC98-32C9-4592-8FC7-A64868C51D14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E1BC98-32C9-4592-8FC7-A64868C51D14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E1BC98-32C9-4592-8FC7-A64868C51D14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E1BC98-32C9-4592-8FC7-A64868C51D14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26C4141E-F4DD-4795-9CD6-06619F3B26A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26C4141E-F4DD-4795-9CD6-06619F3B26A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26C4141E-F4DD-4795-9CD6-06619F3B26A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26C4141E-F4DD-4795-9CD6-06619F3B26A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06649D32-AB49-4A03-9CAB-78DE48A51003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06649D32-AB49-4A03-9CAB-78DE48A51003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06649D32-AB49-4A03-9CAB-78DE48A51003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06649D32-AB49-4A03-9CAB-78DE48A51003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD79BD89-4F4A-4173-9B27-850FC5830DDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD79BD89-4F4A-4173-9B27-850FC5830DDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD79BD89-4F4A-4173-9B27-850FC5830DDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD79BD89-4F4A-4173-9B27-850FC5830DDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBF2ABC4-2B0F-453A-854F-66CFB8606233}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBF2ABC4-2B0F-453A-854F-66CFB8606233}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBF2ABC4-2B0F-453A-854F-66CFB8606233}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBF2ABC4-2B0F-453A-854F-66CFB8606233}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{790A537B-B7BA-4A77-961E-87577ED649BA} = {6703D8AA-F4D2-48BA-8000-E36E489FBD6B}
+		{A1134651-C180-496A-984A-5DA755E5F54C} = {6703D8AA-F4D2-48BA-8000-E36E489FBD6B}
+		{8AEA1A8B-E0C0-41D6-8B9B-503A2C3C9C3E} = {6703D8AA-F4D2-48BA-8000-E36E489FBD6B}
+		{A8A70176-2702-4FB5-A37D-793CDEC5E9E6} = {6703D8AA-F4D2-48BA-8000-E36E489FBD6B}
+		{BADA8055-42A0-4E4D-B6C3-E1E797B01CE3} = {8AEA1A8B-E0C0-41D6-8B9B-503A2C3C9C3E}
+		{53C050AB-84F8-4118-A485-EB9F6FB0BAE8} = {A8A70176-2702-4FB5-A37D-793CDEC5E9E6}
+		{B8E1BC98-32C9-4592-8FC7-A64868C51D14} = {A8A70176-2702-4FB5-A37D-793CDEC5E9E6}
+		{26C4141E-F4DD-4795-9CD6-06619F3B26A2} = {A8A70176-2702-4FB5-A37D-793CDEC5E9E6}
+		{06649D32-AB49-4A03-9CAB-78DE48A51003} = {A1134651-C180-496A-984A-5DA755E5F54C}
+		{FD79BD89-4F4A-4173-9B27-850FC5830DDB} = {A1134651-C180-496A-984A-5DA755E5F54C}
+		{CBF2ABC4-2B0F-453A-854F-66CFB8606233} = {790A537B-B7BA-4A77-961E-87577ED649BA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ECF2FAB3-AC70-45A9-882F-AED79C48D246}
+	EndGlobalSection
+EndGlobal

@@ -1,9 +1,10 @@
-﻿//using CleanArchitecture.Application.Bases;
+﻿using InspireMind.Education.Application.Bases;
+using InspireMind.Education.Application.Models.Identity;
 
-//namespace CleanArchitecture.Application.Contracts.Identity
-//{
-//    public interface IEmailsService
-//    {
-//        public Task<BaseResponse<string>> SendEmail(string email, string Message, string? reason);
-//    }
-//}
+namespace InspireMind.Education.Application.Contracts.Identity
+{
+    public interface IEmailsService
+    {
+        public Task<Result<bool>> SendEmail(Email emailMessage);
+    }
+}

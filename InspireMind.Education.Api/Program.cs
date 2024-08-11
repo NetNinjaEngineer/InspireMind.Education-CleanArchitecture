@@ -1,8 +1,10 @@
 using InspireMind.Education.Application;
 using InspireMind.Education.Application.Middleware;
 using InspireMind.Education.Identity;
+using InspireMind.Education.Identity.Entities;
 using InspireMind.Education.Infrastructure;
 using InspireMind.Education.Persistence;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Net;
@@ -22,6 +24,10 @@ builder.Services.AddControllers(options =>
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppIdentityDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

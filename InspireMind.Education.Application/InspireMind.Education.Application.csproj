@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Contracts\Persistence\" />
-    <Folder Include="Features\Authentication\NewFolder\" />
     <Folder Include="Features\Topics\Requests\Commands\" />
   </ItemGroup>
 

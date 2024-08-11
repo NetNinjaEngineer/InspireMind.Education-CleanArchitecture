@@ -19,7 +19,13 @@ internal class RoleConfiguration : IEntityTypeConfiguration<IdentityRole>
                 Id = "cbc43a8e-f7bb-4445-baaf-1add431ffbbf",
                 Name = "Administrator",
                 NormalizedName = "ADMINISTRATOR"
-            }
+            },
+             new IdentityRole
+             {
+                 Id = "1E25D52D-1C76-40C0-9CEA-5EA71A8088F2",
+                 Name = "User",
+                 NormalizedName = "USER"
+             }
         );
     }
 }

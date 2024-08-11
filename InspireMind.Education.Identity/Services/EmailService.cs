@@ -21,7 +21,7 @@ public class EmailService : BaseResponseHandler, IEmailsService
 
     public async Task<Result<bool>> SendEmail(Email emailMessage)
     {
-        var client = new SendGridClient(_sendGridSettings.);
+        var client = new SendGridClient(_sendGridSettings.ApiKey);
 
         var message = MailHelper.CreateSingleEmail(
             from: new EmailAddress(_sendGridSettings.FromEmail, _sendGridSettings.FromName),

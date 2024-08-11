@@ -44,6 +44,8 @@ public static class IdentityDependencies
                 };
             });
 
+        services.Configure<SendGridSettings>(configuration.GetSection(nameof(SendGridSettings)));
+
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IEmailsService, EmailService>();
 

@@ -1,7 +1,6 @@
 ﻿using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.Contracts.Identity;
 using InspireMind.Education.Application.Features.Authentication.Handlers.Result;
-using InspireMind.Education.Application.Features.Authentication.Requests.Commands;
 using InspireMind.Education.Application.Models.Identity;
 using InspireMind.Education.Identity.Entities;
 using InspireMind.Education.Identity.Helpers;
@@ -45,7 +44,7 @@ public class AuthService : BaseResponseHandler, IAuthService
         _logger = logger;
     }
 
-    public async Task<Result<LoginResult>> Login(LoginCommand request)
+    public async Task<Result<LoginResult>> Login(LoginModel request)
     {
         var loggedInUser = await _userManager.FindByEmailAsync(request.Email);
 
@@ -59,6 +58,8 @@ public class AuthService : BaseResponseHandler, IAuthService
              lockoutOnFailure: false);
 
         var token = await GenerateJwtToken(loggedInUser);
+
+        _logger.LogInformation($"Login successfull.");
 
         return Success(new LoginResult(
             isSucessfull: true,
@@ -103,7 +104,7 @@ public class AuthService : BaseResponseHandler, IAuthService
         return jwtSecurityToken;
     }
 
-    public async Task<Result<RegisterResult>> Register(RegisterCommand request)
+    public async Task<Result<RegisterResult>> Register(RegisterModel request)
     {
         var user = await _userManager.FindByNameAsync(request.UserName);
         if (user is not null)
@@ -131,6 +132,9 @@ public class AuthService : BaseResponseHandler, IAuthService
                 var errors = identityResult.Errors.Select(e => e.Description).ToList();
                 return BadRequest<RegisterResult>("You have an validation errors.", errors: errors);
             }
+
+            _logger.LogInformation($"Register successfull.");
+            return Created(new RegisterResult(true));
         }
 
         return Conflict<RegisterResult>("Invalid Credientials.");
@@ -183,22 +187,22 @@ public class AuthService : BaseResponseHandler, IAuthService
         return BadRequest<string>("Failed to send reset password link. Please try again later.");
     }
 
-    public async Task<Result<string>> ResetPassword(ResetPasswordModel resetModel)
+    public async Task<Result<string>> ResetPassword(string email, string token, ResetPasswordModel resetModel)
     {
-        var user = await _userManager.FindByEmailAsync(resetModel.Email);
+        var user = await _userManager.FindByEmailAsync(email);
 
         if (user is null)
         {
-            _logger.LogWarning($"ResetPassword failed: Invalid user for email {resetModel.Email}");
+            _logger.LogWarning($"ResetPassword failed: Invalid user for email {email}");
             return BadRequest<string>("Invalid user this email");
         }
 
-        var result = await _userManager.ResetPasswordAsync(user, resetModel.Token, resetModel.Password);
+        var result = await _userManager.ResetPasswordAsync(user, token, resetModel.Password);
 
         if (result.Succeeded)
         {
             // send email
-            _logger.LogInformation($"Your password has been reset for email : '{resetModel.Email}'");
+            _logger.LogInformation($"Your password has been reset for email : '{email}'");
 
 
             var emailBody = $@"

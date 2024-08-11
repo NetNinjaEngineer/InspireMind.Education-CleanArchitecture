@@ -11,10 +11,9 @@ using MediatR;
 using Microsoft.Extensions.Localization;
 
 namespace InspireMind.Education.Application.Features.Topics.Handlers.Commands;
-public sealed class TopicsCommandHandler :
-    IRequestHandler<CreateTopicCommand, Result<TopicDto>>,
-    IRequestHandler<UpdateTopicCommand, Unit>,
-    IRequestHandler<DeleteTopicCommand, Unit>
+public sealed class TopicsCommandHandler : IRequestHandler<CreateTopicCommand, Result<TopicDto>>,
+                                           IRequestHandler<UpdateTopicCommand, Unit>,
+                                           IRequestHandler<DeleteTopicCommand, Unit>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
@@ -26,12 +25,14 @@ public sealed class TopicsCommandHandler :
         IMapper mapper,
         IUnitOfWork unitOfWork,
         IValidator<TopicForCreationDto> createTopicValidator,
-        IStringLocalizer<TopicsCommandHandler> localizer)
+        IStringLocalizer<TopicsCommandHandler> localizer,
+        IValidator<TopicForUpdateDto> updateTopicValidator)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
         _createTopicValidator = createTopicValidator;
         _localizer = localizer;
+        _updateTopicValidator = updateTopicValidator;
     }
 
     public async Task<Result<TopicDto>> Handle(

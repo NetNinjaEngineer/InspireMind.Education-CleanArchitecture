@@ -42,4 +42,8 @@
     <ProjectReference Include="..\InspireMind.Education.Persistence\InspireMind.Education.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+
 </Project>

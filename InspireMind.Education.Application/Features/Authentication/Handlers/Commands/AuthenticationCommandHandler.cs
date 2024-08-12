@@ -5,11 +5,12 @@ using InspireMind.Education.Application.Features.Authentication.Requests.Command
 using MediatR;
 
 namespace InspireMind.Education.Application.Features.Authentication.Handlers.Commands;
-public sealed class AuthenticationCommandHandler :
-    IRequestHandler<RegisterCommand, Result<RegisterResult>>,
-    IRequestHandler<LoginCommand, Result<LoginResult>>,
-    IRequestHandler<ForgetPasswordCommand, Result<string>>,
-    IRequestHandler<ResetPasswordCommand, Result<string>>
+public sealed class AuthenticationCommandHandler : IRequestHandler<RegisterCommand, Result<RegisterResult>>,
+                                                   IRequestHandler<LoginCommand, Result<LoginResult>>,
+                                                   IRequestHandler<ForgetPasswordCommand, Result<string>>,
+                                                   IRequestHandler<ResetPasswordCommand, Result<string>>,
+                                                   IRequestHandler<RequestConfirmEmailCommand, Result<string>>,
+                                                   IRequestHandler<ConfirmEmailCommand, Result<string>>
 {
     private readonly IAuthService _authService;
 
@@ -29,4 +30,10 @@ public sealed class AuthenticationCommandHandler :
 
     public async Task<Result<string>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         => await _authService.ResetPassword(request.Email, request.Token, request.ResetRequest);
+
+    public async Task<Result<string>> Handle(RequestConfirmEmailCommand request, CancellationToken cancellationToken)
+        => await _authService.RequestConfirmEmail(request.RequestConfirmModel);
+
+    public async Task<Result<string>> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
+        => await _authService.ConfirmEmail(request.Email, request.Token);
 }

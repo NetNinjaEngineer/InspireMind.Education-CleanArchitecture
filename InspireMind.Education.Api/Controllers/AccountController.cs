@@ -1,5 +1,4 @@
 ﻿using InspireMind.Education.Api.Base;
-using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.Features.Authentication.Handlers.Result;
 using InspireMind.Education.Application.Features.Authentication.Requests.Commands;
 using InspireMind.Education.Application.Models.Identity;
@@ -17,26 +16,20 @@ public class AccountController : AppControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<RegisterResult>> Register(RegisterModel request)
     {
-        Result<RegisterResult> result = await _mediator.Send(new RegisterCommand { RegisterModel = request });
-
-        return CustomResult(result);
+        return CustomResult(await _mediator.Send(new RegisterCommand { RegisterModel = request }));
     }
 
 
     [HttpPost("login")]
     public async Task<ActionResult<LoginResult>> Login(LoginModel request)
     {
-        Result<LoginResult> result = await _mediator.Send(new LoginCommand { LoginModel = request });
-
-        return Ok(result.Data);
+        return CustomResult(await _mediator.Send(new LoginCommand { LoginModel = request }));
     }
 
     [HttpPost("forget-password")]
     public async Task<ActionResult<string>> ForgetPassword(ForgetPasswordModel request)
     {
-        Result<string> result = await _mediator.Send(new ForgetPasswordCommand { ForgetRequest = request });
-
-        return CustomResult(result);
+        return CustomResult(await _mediator.Send(new ForgetPasswordCommand { ForgetRequest = request }));
     }
 
     [HttpPost("reset-password")]
@@ -45,14 +38,24 @@ public class AccountController : AppControllerBase
         [FromQuery] string token,
         [FromBody] ResetPasswordModel request)
     {
-        Result<string> result = await _mediator.Send(new ResetPasswordCommand
+        return CustomResult(await _mediator.Send(new ResetPasswordCommand
         {
             Email = email,
             Token = token,
             ResetRequest = request
-        });
+        }));
+    }
 
-        return CustomResult(result);
+    [HttpPost("request-confirm-email")]
+    public async Task<ActionResult<string>> RequestConfirmEmail(RequestConfirmEmailModel request)
+    {
+        return CustomResult(await _mediator.Send(new RequestConfirmEmailCommand { RequestConfirmModel = request }));
+    }
+
+    [HttpPost("confirm-email")]
+    public async Task<ActionResult<string>> ConfirmEmail(string email, string token)
+    {
+        return CustomResult(await _mediator.Send(new ConfirmEmailCommand { Email = email, Token = token }));
     }
 
 

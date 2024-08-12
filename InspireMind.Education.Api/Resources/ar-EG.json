@@ -5,5 +5,16 @@
   "courseNotFoundMessage": "لم يتم العثور على الموضوع ذو المعرف: '{0}'",
   "validationErrors": "حدثت أخطاء في التحقق!!!",
   "notEmpty": "{0} لا يمكن أن يكون فارغاً.",
-  "notNull": "{0} مطلوب."
+  "notNull": "{0} مطلوب.",
+  "UnknownUser": "مستخدم غير معروف.",
+  "EmailNotConfirmed": "لم يتم تأكيد البريد الإلكتروني.",
+  "InvalidCredentials": "بيانات اعتماد غير صالحة.",
+  "UsernameExisted": "اسم المستخدم موجود بالفعل.",
+  "EmailConfirmed": "تم تأكيد البريد الإلكتروني.",
+  "EmailConfirmationMessageSent": "تم إرسال رسالة تأكيد البريد الإلكتروني بنجاح.",
+  "EmailConfirmationMessageNotSent": "لم يتم إرسال رسالة تأكيد البريد الإلكتروني!!!",
+  "PasswordResetSuccess": "تم إعادة تعيين كلمة المرور الخاصة بك. تحقق من بريدك الإلكتروني.",
+  "PasswordResetFailure": "فشل في إعادة تعيين كلمة المرور الخاصة بك.",
+  "ResetPasswordLinkSent": "تم إرسال رابط إعادة تعيين كلمة المرور.",
+  "ResetPasswordLinkFailure": "فشل في إرسال رابط إعادة تعيين كلمة المرور. يرجى المحاولة مرة أخرى لاحقًا."
 }

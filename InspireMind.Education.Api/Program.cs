@@ -46,6 +46,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
+
 app.UseMiddleware<GlobalErrorHandlingMiddleware>();
 
 var supportedCultures = new[] { "en-US", "ar-EG", "en" };

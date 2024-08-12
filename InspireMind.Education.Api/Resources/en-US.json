@@ -7,5 +7,17 @@
   "notEmpty": "{0} cannot be empty.",
   "notNull": "{0} is required.",
   "courseDurationGreaterThanZero": "Duration must be greater than zero",
-  "courseDurationRequired": "Duration is required"
+  "courseDurationRequired": "Duration is required",
+  "UnknownUser": "Unknown user.",
+  "EmailNotConfirmed": "Email not confirmed.",
+  "InvalidCredentials": "Invalid credentials.",
+  "UsernameExisted": "Username already exists.",
+  "EmailConfirmed": "Email confirmed.",
+  "EmailConfirmationMessageSent": "Email confirmation message sent successfully.",
+  "EmailConfirmationMessageNotSent": "Email confirmation message not sent!!!",
+  "PasswordResetSuccess": "Your password has been reset. Check your email.",
+  "PasswordResetFailure": "Failed to reset your password.",
+  "ResetPasswordLinkSent": "Reset password link has been sent.",
+  "ResetPasswordLinkFailure": "Failed to send reset password link. Please try again later."
+
 }

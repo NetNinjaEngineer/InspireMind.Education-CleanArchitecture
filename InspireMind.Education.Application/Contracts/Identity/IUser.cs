@@ -1,7 +1,6 @@
-﻿//namespace CleanArchitecture.Application.Contracts.Identity
-//{
-//    public interface IUser
-//    {
-//        string? Id { get; }
-//    }
-//}
+﻿namespace InspireMind.Education.Application.Contracts.Identity;
+
+public interface IUser
+{
+    string? Id { get; }
+}

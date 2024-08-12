@@ -1,19 +1,20 @@
-﻿//using CleanArchitecture.Application.Bases;
+﻿using InspireMind.Education.Application.Bases;
+using InspireMind.Education.Application.Features.Roles.Requests.Commands;
 
-//namespace CleanArchitecture.Application.Contracts.Identity
-//{
-//    public interface IRoleService
-//    {
-//        Task<BaseResponse<string>> CreateRole(CreateRoleCommand request);
-//        Task<BaseResponse<string>> EditRole(EditRoleCommand request);
-//        Task<BaseResponse<string>> DeleteRole(DeleteRoleCommand request);
-//        Task<BaseResponse<string>> AddClaimToRole(AddClaimToRoleCommand request);
-//        Task<BaseResponse<string>> AddRoleToUser(AssignRoleToUserCommand request);
-//        Task<BaseResponse<string>> AddClaimToUser(AssignClaimToUserCommand request);
-//        Task<BaseResponse<IEnumerable<string>>> GetUserRoles(string userId);
-//        Task<BaseResponse<IEnumerable<string>>> GetUserClaims(string userId);
-//        Task<BaseResponse<IEnumerable<string>>> GetRoleClaims(string roleName);
-//        Task<BaseResponse<IEnumerable<string>>> GetAllRoles();
-//        Task<BaseResponse<IEnumerable<string>>> GetAllClaims();
-//    }
-//}
+namespace CleanArchitecture.Application.Contracts.Identity
+{
+    public interface IRoleService
+    {
+        Task<Result<string>> CreateRole(CreateRoleCommand request);
+        Task<Result<string>> EditRole(EditRoleCommand request);
+        Task<Result<string>> DeleteRole(DeleteRoleCommand request);
+        //Task<Result<string>> AddClaimToRole(AddClaimToRoleCommand request);
+        Task<Result<string>> AddRoleToUser(AssignRoleToUserCommand request);
+        //Task<Result<string>> AddClaimToUser(AssignClaimToUserCommand request);
+        Task<Result<IEnumerable<string>>> GetUserRoles(string userId);
+        Task<Result<IEnumerable<string>>> GetUserClaims(string userId);
+        Task<Result<IEnumerable<string>>> GetRoleClaims(string roleName);
+        Task<Result<IEnumerable<string>>> GetAllRoles();
+        Task<Result<IEnumerable<string>>> GetAllClaims();
+    }
+}

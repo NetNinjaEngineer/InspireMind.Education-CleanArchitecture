@@ -1,4 +1,5 @@
-﻿using InspireMind.Education.Application.Contracts.Identity;
+﻿using CleanArchitecture.Application.Contracts.Identity;
+using InspireMind.Education.Application.Contracts.Identity;
 using InspireMind.Education.Application.Models.Identity;
 using InspireMind.Education.Identity.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,6 +49,8 @@ public static class IdentityDependencies
 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IEmailsService, EmailService>();
+        services.AddScoped<IUser, CurrentUserService>();
+        services.AddScoped<IRoleService, RoleService>();
 
         return services;
     }

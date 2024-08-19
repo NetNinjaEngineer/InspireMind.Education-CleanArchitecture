@@ -276,14 +276,15 @@ public class AuthService : BaseResponseHandler, IAuthService
 
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
+        var encodedToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
+
         var emailConfirmationParams = new Dictionary<string, string>
         {
             { "email", user.Email! },
-            {"token", token }
+            {"token", encodedToken}
         };
 
-        var Request = _context.HttpContext!.Request;
-        var confirmUri = $"{Request.Scheme}://{Request.Host}/api/account/confirm-email";
+        var confirmUri = $"{requestConfirmModel.ClientUri}/Account/ConfirmEmail";
 
         var callbackUri = QueryHelpers.AddQueryString(confirmUri, emailConfirmationParams!);
 
@@ -339,7 +340,8 @@ public class AuthService : BaseResponseHandler, IAuthService
 
         if (user is not null)
         {
-            var result = await _userManager.ConfirmEmailAsync(user, token);
+            var decodedToken = Encoding.UTF8.GetString(Convert.FromBase64String(token));
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
             return result.Succeeded ?
                 Success<string>(_localizer["EmailConfirmed", user.Email!]) :
                 BadRequest<string>(_localizer["EmailNotConfirmed", user.Email!]);

@@ -1,8 +1,144 @@
-﻿@{
+﻿@model PagedList<Product>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1>Products</h1>
+<br />
+
+<form asp-action="Index" method="get">
+    <div class="form-group">
+        <input type="text" name="searchTerm" class="form-control" placeholder="Search for products...">
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<hr/>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-orderBy="@ViewBag.NameSortParam">Name</a>
+            </th>
+            <th>Category</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model.Items)
+        {
+            <tr>
+                <td>
+                    <a href="?id=@product.Id">@product.Name</a>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@product.Id">@product.Category</a>
+                </td>
+                <td>@product.Price.ToString("C")</td>
+                <td><button onclick="loadProductDetails(@product.Id)">Show Details</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@if (Model.SelectedProduct != null)
+{
+    <div id="product-details">
+        <h2>@Model.SelectedProduct.Name</h2>
+        <p>Category: @Model.SelectedProduct.Category</p>
+        <p>Price: @Model.SelectedProduct.Price.ToString("C")</p>
+        <div>
+            <img src="@Model.SelectedProduct.ImageUrl" alt="@Model.SelectedProduct.Name" style="max-width: 400px;" />
+        </div>
+        <p>@Model.SelectedProduct.Description</p>
+    </div>
+}
+
+
+<div id="details-container">
+    <partial name="_ProductDetailsPartial" model="null"/>
 </div>
+
+<div>
+    Page @(Model.PageNumber) of @(Model.TotalPages)
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            @if (Model.PageNumber > 1)
+            {
+                <li class="page-item">
+                    <a href="?pageNumber=@(Model.PageNumber - 1)" class="page-link" tabindex="-1">Previous</a>
+                </li>
+            }
+            @for (int i = 0; i < Model.TotalPages; i++)
+            {
+                <li class="page-item"><a class="page-link" href="?pageNumber=@(i + 1)">@(i + 1)</a></li>
+            }
+
+            @if (Model.PageNumber < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a href="?pageNumber=@(Model.PageNumber + 1)" class="page-link">Next</a>
+                </li>
+            }
+         
+        </ul>
+    </nav>
+</div>
+
+
+<!-- Modal -->
+<div id="productModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Product Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="modalProductDetails">
+                    <!-- Product details will be inserted here by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function loadProductDetails(productId) {
+            // $.ajax({
+            //     url: '@Url.Action("Details", "Home")',
+            //     type: 'GET',
+            //     data: { id: productId },
+            //     success: function (result) {
+            //         $('#details-container').html(result);
+            //     }
+            // });
+
+
+            $.get('@Url.Action("Details")', { id: productId }, function (data) {
+                $('#modalProductDetails').html(`
+                            <h2>${data.name}</h2>
+                            <p>Category: ${data.category}</p>
+                            <p>Price: ${data.price}</p>
+                            <div>
+                                <img src="${data.imageUrl}" alt="${data.name}" style="max-width: 400px;" />
+                            </div>
+                            <p>${data.description}</p>
+                        `);
+                $('#productModal').modal('show');
+            });
+
+
+        }
+    </script>
+}

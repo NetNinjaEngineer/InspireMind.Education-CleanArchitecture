@@ -53,7 +53,7 @@ public class AccountController : AppControllerBase
     }
 
     [HttpPost("confirm-email")]
-    public async Task<ActionResult<string>> ConfirmEmail(string email, string token)
+    public async Task<ActionResult<string>> ConfirmEmail([FromQuery] string email, [FromQuery] string token)
     {
         return CustomResult(await _mediator.Send(new ConfirmEmailCommand { Email = email, Token = token }));
     }

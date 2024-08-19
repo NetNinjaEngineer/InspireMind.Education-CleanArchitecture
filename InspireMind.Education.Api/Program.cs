@@ -4,6 +4,7 @@ using InspireMind.Education.Identity;
 using InspireMind.Education.Identity.Entities;
 using InspireMind.Education.Infrastructure;
 using InspireMind.Education.Persistence;
+using InspireMind.Education.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -36,7 +37,18 @@ builder.Services
     .AddApplicationDependencies(builder.Configuration)
     .AddInfrastructureDependencies(builder.Configuration)
     .AddPersistenceDependencies(builder.Configuration)
-    .AddIdentityDependencies(builder.Configuration);
+    .AddIdentityDependencies(builder.Configuration)
+    .AddServiceDependencies();
+
+builder.Services.AddCors(options =>
+{
+    var clientUrl = builder.Configuration.GetSection("ClientUrl").Value!;
+
+    options.AddPolicy("CorsPolicy", options =>
+        options.AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithOrigins(clientUrl, "http://127.0.0.1:5500"));
+});
 
 var app = builder.Build();
 
@@ -56,6 +68,8 @@ var localizationOptions = new RequestLocalizationOptions()
     .AddSupportedCultures(supportedCultures);
 
 app.UseRequestLocalization(localizationOptions);
+
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 

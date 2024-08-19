@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InspireMind.Education.Appli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InspireMind.Education.Api", "InspireMind.Education.Api\InspireMind.Education.Api.csproj", "{CBF2ABC4-2B0F-453A-854F-66CFB8606233}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InspireMind.Education.Service", "InspireMind.Education.Service\InspireMind.Education.Service.csproj", "{DF65C779-11CE-4F51-BC91-055474348724}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{CBF2ABC4-2B0F-453A-854F-66CFB8606233}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBF2ABC4-2B0F-453A-854F-66CFB8606233}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBF2ABC4-2B0F-453A-854F-66CFB8606233}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF65C779-11CE-4F51-BC91-055474348724}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF65C779-11CE-4F51-BC91-055474348724}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF65C779-11CE-4F51-BC91-055474348724}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF65C779-11CE-4F51-BC91-055474348724}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +85,7 @@ Global
 		{06649D32-AB49-4A03-9CAB-78DE48A51003} = {A1134651-C180-496A-984A-5DA755E5F54C}
 		{FD79BD89-4F4A-4173-9B27-850FC5830DDB} = {A1134651-C180-496A-984A-5DA755E5F54C}
 		{CBF2ABC4-2B0F-453A-854F-66CFB8606233} = {790A537B-B7BA-4A77-961E-87577ED649BA}
+		{DF65C779-11CE-4F51-BC91-055474348724} = {A1134651-C180-496A-984A-5DA755E5F54C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECF2FAB3-AC70-45A9-882F-AED79C48D246}

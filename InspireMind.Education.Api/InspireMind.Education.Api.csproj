@@ -40,6 +40,7 @@
     <ProjectReference Include="..\InspireMind.Education.Identity\InspireMind.Education.Identity.csproj" />
     <ProjectReference Include="..\InspireMind.Education.Infrastructure\InspireMind.Education.Infrastructure.csproj" />
     <ProjectReference Include="..\InspireMind.Education.Persistence\InspireMind.Education.Persistence.csproj" />
+    <ProjectReference Include="..\InspireMind.Education.Service\InspireMind.Education.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>

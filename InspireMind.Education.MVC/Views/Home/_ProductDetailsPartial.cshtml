@@ -1,0 +1,14 @@
+﻿@model Product?
+
+@if(Model is not null)
+{
+    <div id="product-details">
+        <h2>@Model.Name</h2>
+        <p>Category: @Model.Category</p>
+        <p>Price: @Model.Price.ToString("C")</p>
+        <div>
+            <img src="@Model.ImageUrl" alt="@Model.Name" style="max-width: 400px;" />
+        </div>
+        <p>@Model.Description</p>
+    </div>
+}

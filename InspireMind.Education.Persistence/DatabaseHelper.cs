@@ -44,8 +44,27 @@ public static class DatabaseHelper
             new() {Id = Guid.Parse("1E2BAC13-26BE-4FF0-9716-EA95970A7BB7"), CourseName = "Machine Learning", Duration = 50, TopicId = Guid.Parse("71FD7466-E4D4-41F6-ACE8-ED67EA8FAFCF")},
             new() {Id = Guid.Parse("AA25D7C5-5F48-40B3-BE6E-4BF6EB577F7A"), CourseName = "Artificial Intelligence", Duration = 55 , TopicId = Guid.Parse("71FD7466-E4D4-41F6-ACE8-ED67EA8FAFCF")},
             new() {Id = Guid.Parse("A4207BAB-0908-4FF5-878C-0AE69DBA6457"), CourseName = "Blockchain Technology", Duration = 40, TopicId = Guid.Parse("DF8D86F9-69D9-4EDA-9FC4-AA8725C7A47B")},
-            new() {Id = Guid.Parse("1AB8063B-DC0F-43A6-9109-ED1B6770C82D"), CourseName = "Internet of Things (IoT)", Duration = 35, TopicId = Guid.Parse("5393A6FE-5C8B-42AF-A453-2AF2C64F5A35")}
-
+            new() {Id = Guid.Parse("1AB8063B-DC0F-43A6-9109-ED1B6770C82D"), CourseName = "Internet of Things (IoT)", Duration = 35, TopicId = Guid.Parse("5393A6FE-5C8B-42AF-A453-2AF2C64F5A35")},
+            new() {Id = Guid.Parse("A0A38F9A-8D3C-4F88-9092-48D0EB7764B3"), CourseName = "Kotlin for Android Development", Duration = 40, TopicId = Guid.Parse("B9DD9A87-4852-434E-99DD-3103F7FBA183")},
+            new() {Id = Guid.Parse("7A5F4A5A-B46E-41A3-8E68-00B378B0E7DB"), CourseName = "Swift Programming", Duration = 35, TopicId = Guid.Parse("B9DD9A87-4852-434E-99DD-3103F7FBA183")},
+            new() {Id = Guid.Parse("F6F5D3EB-DB8B-4E99-B0DF-9AFC4B7F1C48"), CourseName = "Ruby on Rails", Duration = 45, TopicId = Guid.Parse("B16EA527-9F9C-4C58-8385-A2F69E5C83D9")},
+            new() {Id = Guid.Parse("ACEE13C3-C20C-4B4C-AD19-4A4D9868424D"), CourseName = "PHP for Web Development", Duration = 30, TopicId = Guid.Parse("B16EA527-9F9C-4C58-8385-A2F69E5C83D9")},
+            new() {Id = Guid.Parse("88B07CB4-74EC-4D79-9E77-B0FBBC7F914C"), CourseName = "Angular Development", Duration = 40, TopicId = Guid.Parse("B16EA527-9F9C-4C58-8385-A2F69E5C83D9")},
+            new() {Id = Guid.Parse("FC563F61-C90D-4F1A-9E5B-8C9EFDF59323"), CourseName = "Vue.js Fundamentals", Duration = 35, TopicId = Guid.Parse("B16EA527-9F9C-4C58-8385-A2F69E5C83D9")},
+            new() {Id = Guid.Parse("9B7D74E9-A0A7-4D6C-A27E-7F6EED4BA1CB"), CourseName = "Golang Programming", Duration = 45, TopicId = Guid.Parse("9B0418C2-D8C8-46FB-BD0D-0094F83AD563")},
+            new() {Id = Guid.Parse("30FE5C0C-7DB5-4F7C-B3A4-21711B3A36B7"), CourseName = "Rust for Systems Programming", Duration = 50, TopicId = Guid.Parse("9B0418C2-D8C8-46FB-BD0D-0094F83AD563")},
+            new() {Id = Guid.Parse("3B28DFAA-03B3-4382-A1A9-3C8C8FE5682B"), CourseName = "Docker & Kubernetes", Duration = 40, TopicId = Guid.Parse("7DB2ED45-A087-4E00-B804-B944F400F450")},
+            new() {Id = Guid.Parse("ACE2BCE9-6C9D-47F8-995D-6D8BCA51D5C2"), CourseName = "AWS Cloud Practitioner", Duration = 35, TopicId = Guid.Parse("7DB2ED45-A087-4E00-B804-B944F400F450")},
+            new() {Id = Guid.Parse("0B873A94-4B77-4C08-B7A4-6F3B816D0E91"), CourseName = "Azure Fundamentals", Duration = 30, TopicId = Guid.Parse("7DB2ED45-A087-4E00-B804-B944F400F450")},
+            new() {Id = Guid.Parse("16DAF9CB-A94E-4C3E-8A84-47FB0CF5917D"), CourseName = "Google Cloud Platform Essentials", Duration = 35, TopicId = Guid.Parse("7DB2ED45-A087-4E00-B804-B944F400F450")},
+            new() {Id = Guid.Parse("9AC899B5-9E60-4D44-B202-8FDC85CFB77C"), CourseName = "Big Data with Hadoop", Duration = 50, TopicId = Guid.Parse("71FD7466-E4D4-41F6-ACE8-ED67EA8FAFCF")},
+            new() {Id = Guid.Parse("A318F207-098D-46B9-BB8D-5B96B3A04D35"), CourseName = "Data Visualization with Tableau", Duration = 25, TopicId = Guid.Parse("71FD7466-E4D4-41F6-ACE8-ED67EA8FAFCF")},
+            new() {Id = Guid.Parse("DB63E2D8-7FEC-4F79-BC1E-50C6728192C3"), CourseName = "Ethical Hacking", Duration = 45, TopicId = Guid.Parse("62841CBA-863B-4816-9366-E789646CA43E")},
+            new() {Id = Guid.Parse("6CFF4994-907A-46AA-8FC7-3E5976C5B4A1"), CourseName = "Penetration Testing", Duration = 40, TopicId = Guid.Parse("62841CBA-863B-4816-9366-E789646CA43E")},
+            new() {Id = Guid.Parse("D8496FC3-8E36-4C99-875D-53D7C2E156D2"), CourseName = "Artificial Neural Networks", Duration = 50, TopicId = Guid.Parse("71FD7466-E4D4-41F6-ACE8-ED67EA8FAFCF")},
+            new() {Id = Guid.Parse("7559534A-0C8B-4E2A-85F8-FFCBF3D16A1E"), CourseName = "Natural Language Processing", Duration = 55, TopicId = Guid.Parse("71FD7466-E4D4-41F6-ACE8-ED67EA8FAFCF")},
+            new() {Id = Guid.Parse("902BFB23-70A0-4A55-B8C0-432CEA6F7D1C"), CourseName = "Augmented Reality Development", Duration = 45, TopicId = Guid.Parse("B9DD9A87-4852-434E-99DD-3103F7FBA183")},
+            new() {Id = Guid.Parse("DEEA5689-78C2-42B4-A287-52E66394A219"), CourseName = "Virtual Reality Development", Duration = 45, TopicId = Guid.Parse("B9DD9A87-4852-434E-99DD-3103F7FBA183")}
         };
     }
 }

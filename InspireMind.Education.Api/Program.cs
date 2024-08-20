@@ -8,6 +8,7 @@ using InspireMind.Education.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Text.Json.Serialization;
 
@@ -47,10 +48,14 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CorsPolicy", options =>
         options.AllowAnyHeader()
             .AllowAnyMethod()
-            .WithOrigins(clientUrl, "http://127.0.0.1:5500"));
+            .WithOrigins(clientUrl));
 });
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+var database = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+await database.Database.MigrateAsync();
 
 if (app.Environment.IsDevelopment())
 {

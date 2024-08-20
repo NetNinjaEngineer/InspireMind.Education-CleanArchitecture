@@ -1,144 +1,263 @@
-﻿@model PagedList<Product>
+﻿@using InspireMind.Education.MVC.Helpers
+@model CourseDtoPagination
+@inject IHttpContextAccessor context
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Index";
+    var Request = context.HttpContext?.Request;
+    var topics = ViewData["Topics"] as IReadOnlyList<TopicDto>;
 }
 
-<h1>Products</h1>
-<br />
+<p id="pagedResultInfo"></p>
 
-<form asp-action="Index" method="get">
-    <div class="form-group">
-        <input type="text" name="searchTerm" class="form-control" placeholder="Search for products...">
+<form id="filterForm" class="form-inline mb-3">
+    <div class="form-group mr-2">
+        <label for="searchTerm">Search</label>
+        <input type="text" class="form-control ml-2" id="searchTerm" placeholder="Search by course name or topic name...">
     </div>
-    <button type="submit" class="btn btn-primary">Search</button>
+
+    <div class="form-group mr-2">
+        <label for="topicId">Topic</label>
+        <select name="topicId" class="form-control ml-2" id="topicId">
+            <option value="">-- Select Topic --</option>
+            @if (topics is not null)
+            {
+                @foreach (var topic in topics)
+                {
+                    @if(topic.Id.ToString() == Request!.Query["topicId"])
+                    {
+                        <option value="@topic.Id" selected>@topic.TopicName</option>
+                    }
+                    else
+                    {
+                        <option value="@topic.Id">@topic.TopicName</option>
+                    }
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group mr-2">
+        <label for="pageSize">Page Size</label>
+        <select name="pageSize" class="form-control ml-2" id="pageSize">
+            @foreach (var pageSize in Constants.PageSizes)
+            {
+                @if (pageSize == Request!.Query["pageSize"])
+                {
+                    <option value="@pageSize" selected>@pageSize</option>
+                }
+                else
+                {
+                    <option value="@pageSize">@pageSize</option>
+                }
+
+            }
+        </select>
+    </div>
+
+    <button id="btnSubmit" type="button" class="btn btn-primary">Apply Filters</button>
 </form>
 
-<hr/>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                <a asp-action="Index" asp-route-orderBy="@ViewBag.NameSortParam">Name</a>
-            </th>
-            <th>Category</th>
-            <th>Price</th>
+            <th>@Html.DisplayNameFor(c => c.Data.First().Id)</th>
+            <th>@Html.DisplayNameFor(c => c.Data.First().CourseName)</th>
+            <th>@Html.DisplayNameFor(c => c.Data.First().Duration)</th>
+            <th>@Html.DisplayNameFor(c => c.Data.First().TopicId)</th>
+            <th>@Html.DisplayNameFor(c => c.Data.First().TopicName)</th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var product in Model.Items)
+    <tbody id="courseTableBody">
+        @foreach (var item in Model.Data)
         {
             <tr>
-                <td>
-                    <a href="?id=@product.Id">@product.Name</a>
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@product.Id">@product.Category</a>
-                </td>
-                <td>@product.Price.ToString("C")</td>
-                <td><button onclick="loadProductDetails(@product.Id)">Show Details</button></td>
+                <td>@item.Id</td>
+                <td>@item.CourseName</td>
+                <td>@item.Duration</td>
+                <td>@item.Id</td>
+                <td>@item.TopicName</td>
             </tr>
         }
     </tbody>
 </table>
 
+<hr />
+<nav aria-label="...">
+    <ul class="pagination" id="pagination">
+    </ul>
+</nav>
 
-@if (Model.SelectedProduct != null)
-{
-    <div id="product-details">
-        <h2>@Model.SelectedProduct.Name</h2>
-        <p>Category: @Model.SelectedProduct.Category</p>
-        <p>Price: @Model.SelectedProduct.Price.ToString("C")</p>
-        <div>
-            <img src="@Model.SelectedProduct.ImageUrl" alt="@Model.SelectedProduct.Name" style="max-width: 400px;" />
-        </div>
-        <p>@Model.SelectedProduct.Description</p>
-    </div>
-}
-
-
-<div id="details-container">
-    <partial name="_ProductDetailsPartial" model="null"/>
-</div>
-
-<div>
-    Page @(Model.PageNumber) of @(Model.TotalPages)
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
-            @if (Model.PageNumber > 1)
-            {
-                <li class="page-item">
-                    <a href="?pageNumber=@(Model.PageNumber - 1)" class="page-link" tabindex="-1">Previous</a>
-                </li>
-            }
-            @for (int i = 0; i < Model.TotalPages; i++)
-            {
-                <li class="page-item"><a class="page-link" href="?pageNumber=@(i + 1)">@(i + 1)</a></li>
-            }
-
-            @if (Model.PageNumber < Model.TotalPages)
-            {
-                <li class="page-item">
-                    <a href="?pageNumber=@(Model.PageNumber + 1)" class="page-link">Next</a>
-                </li>
-            }
-         
-        </ul>
-    </nav>
-</div>
-
-
-<!-- Modal -->
-<div id="productModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Product Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="modalProductDetails">
-                    <!-- Product details will be inserted here by JavaScript -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts{
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+@section Scripts {
     <script>
-        function loadProductDetails(productId) {
-            // $.ajax({
-            //     url: '@Url.Action("Details", "Home")',
-            //     type: 'GET',
-            //     data: { id: productId },
-            //     success: function (result) {
-            //         $('#details-container').html(result);
-            //     }
-            // });
 
+        document.getElementById("searchTerm").oninput = (event) => {
+            const searchValue = event.target.value;
+            $.ajax({
+                url: `https://localhost:7218/api/Courses/CoursesWithTopics`,
+                type: 'GET',
+                data: {
+                    searchTerm: searchValue != null ? searchValue : ""
+                },
+                success: function (response) {
+                    const tableBody = document.getElementById('courseTableBody');
+                    tableBody.innerHTML = '';
 
-            $.get('@Url.Action("Details")', { id: productId }, function (data) {
-                $('#modalProductDetails').html(`
-                            <h2>${data.name}</h2>
-                            <p>Category: ${data.category}</p>
-                            <p>Price: ${data.price}</p>
-                            <div>
-                                <img src="${data.imageUrl}" alt="${data.name}" style="max-width: 400px;" />
-                            </div>
-                            <p>${data.description}</p>
-                        `);
-                $('#productModal').modal('show');
+                    response.data.forEach(course => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                                    <td>${course.id}</td>
+                                    <td>${course.courseName}</td>
+                                    <td>${course.duration}</td>
+                                    <td>${course.topicId}</td>
+                                    <td>${course.topicName}</td>
+                                `;
+                        tableBody.appendChild(row)
+                    });
+
+                    updatePagination(response.metaData);
+                },
+                error: function () {
+                    console.log('Error retrieving data. Please try again.');
+                }
             });
+        };
 
+        document.getElementById('btnSubmit').addEventListener("click", () => {
+            var topicId = $('#topicId').val();
+            var pageSize = $('#pageSize').val();
 
+            $.ajax({
+                url: `https://localhost:7218/api/Courses/CoursesWithTopics`,
+                type: 'GET',
+                data: {
+                    topicId: topicId,
+                    pageSize: pageSize,
+                    pageNumber: 1
+                },
+                success: function (response) {
+                    const tableBody = document.getElementById('courseTableBody');
+                    tableBody.innerHTML = '';
+
+                    response.data.forEach(course => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                                    <td>${course.id}</td>
+                                    <td>${course.courseName}</td>
+                                    <td>${course.duration}</td>
+                                    <td>${course.topicId}</td>
+                                    <td>${course.topicName}</td>
+                                `;
+                        tableBody.appendChild(row);
+                    });
+
+                    updatePagination(response.metaData);
+                },
+                error: function () {
+                    alert('Error retrieving data. Please try again.');
+                }
+            });
+        });
+
+        function loadPage(pageNumber) {
+            var topicId = $('#topicId').val();
+            var pageSize = $('#pageSize').val();
+
+            $.ajax({
+                url: `https://localhost:7218/api/Courses/CoursesWithTopics`,
+                type: 'GET',
+                data: {
+                    topicId: topicId,
+                    pageSize: pageSize,
+                    pageNumber: pageNumber
+                },
+                beforeSend: function () {
+                    // Disable pagination links while loading
+                    $('.pagination .page-link').addClass('disabled');
+                },
+                success: function (response) {
+                    const tableBody = document.getElementById('courseTableBody');
+                    tableBody.innerHTML = '';
+
+                    response.data.forEach(course => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                                    <td>${course.id}</td>
+                                    <td>${course.courseName}</td>
+                                    <td>${course.duration}</td>
+                                    <td>${course.topicId}</td>
+                                    <td>${course.topicName}</td>
+                                `;
+                        tableBody.appendChild(row);
+                    });
+
+                    updatePagination(response.metaData);
+
+                    // Re-enable pagination links after loading
+                    $('.pagination .page-link').removeClass('disabled');
+                },
+                error: function () {
+                    alert('Error retrieving data. Please try again.');
+                }
+            });
         }
+
+        function updatePagination(metaData) {
+            console.log(metaData);
+            const pagedResultInfo = document.getElementById('pagedResultInfo');
+            pagedResultInfo.innerHTML = '';
+            pagedResultInfo.textContent = `${metaData.currentPage}-${metaData.totalPages} of ${metaData.totalCount}`;
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            // Previous Button
+            if (metaData.hasPrevious) {
+                const prevItem = document.createElement('li');
+                prevItem.classList.add('page-item');
+                const prevLink = document.createElement('a');
+                prevLink.classList.add('page-link');
+                prevLink.setAttribute("href", "#");
+                prevLink.textContent = 'Previous';
+                prevLink.addEventListener('click', () => loadPage(metaData.currentPage - 1));
+                prevItem.appendChild(prevLink);
+                pagination.appendChild(prevItem);
+            }
+
+            // Page Numbers
+            for (let i = 1; i <= metaData.totalPages; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.classList.add('page-item');
+                if (i === metaData.currentPage) {
+                    pageItem.classList.add('active');
+                }
+                const pageLink = document.createElement('a');
+                pageLink.classList.add('page-link');
+                pageLink.setAttribute("href", "#");
+                pageLink.textContent = i;
+                pageLink.addEventListener('click', () => loadPage(i));
+                pageItem.appendChild(pageLink);
+                pagination.appendChild(pageItem);
+            }
+
+            // Next Button
+            if (metaData.hasNext) {
+                const nextItem = document.createElement('li');
+                nextItem.classList.add('page-item');
+                const nextLink = document.createElement('a');
+                nextLink.classList.add('page-link');
+                nextLink.setAttribute("href", "#");
+                nextLink.textContent = 'Next';
+                nextLink.addEventListener('click', () => loadPage(metaData.currentPage + 1));
+                nextItem.appendChild(nextLink);
+                pagination.appendChild(nextItem);
+            }
+
+            // Add cursor pointer when hovering over pagination links
+            const linkItems = document.querySelectorAll('.pagination li');
+            linkItems.forEach(item => {
+                item.style.cursor = 'pointer';
+            });
+        }
+
     </script>
 }

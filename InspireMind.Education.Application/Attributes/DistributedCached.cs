@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Text;
 
 namespace InspireMind.Education.Application.Attributes;
@@ -18,11 +19,15 @@ public class DistributedCached : Attribute, IAsyncActionFilter
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
+        var loggerFactory = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger<DistributedCached>();
+
         var cacheService = context.HttpContext.RequestServices.GetRequiredService<IDistributedCacheService>();
         var CacheKey = GenerateCacheKeyFromRequest(context.HttpContext.Request);
         var cacheResponse = await cacheService.GetCachedResponseAsync(CacheKey);
         if (!string.IsNullOrEmpty(cacheResponse))
         {
+            logger.LogInformation("Get Response From Cache.");
             var content = new ContentResult
             {
                 Content = cacheResponse,

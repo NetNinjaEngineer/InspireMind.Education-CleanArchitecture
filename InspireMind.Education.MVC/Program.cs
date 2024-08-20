@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICoursesService, CoursesService>();
+builder.Services.AddScoped<ITopicService, TopicService>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -18,6 +20,21 @@ builder.Services.AddHttpClient(Constants.AuthClient, options =>
     options.DefaultRequestHeaders.Clear();
     options.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
+
+builder.Services.AddHttpClient(Constants.CoursesClient, options =>
+{
+    options.BaseAddress = new Uri(builder.Configuration.GetSection("ApiBaseUrl").Value!);
+    options.DefaultRequestHeaders.Clear();
+    options.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+});
+
+builder.Services.AddHttpClient(Constants.TopicsClient, options =>
+{
+    options.BaseAddress = new Uri(builder.Configuration.GetSection("ApiBaseUrl").Value!);
+    options.DefaultRequestHeaders.Clear();
+    options.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+});
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

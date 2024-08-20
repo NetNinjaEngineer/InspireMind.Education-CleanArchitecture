@@ -3,7 +3,7 @@ public abstract class RequestParameters
 {
     #region Fields
     private const int _maxPageSize = 50;
-    private int _pageSize = 10;
+    private int _pageSize = 5;
     private string? searchTerm;
     #endregion
 

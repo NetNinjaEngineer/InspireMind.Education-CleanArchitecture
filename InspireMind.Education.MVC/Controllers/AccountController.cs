@@ -80,4 +80,11 @@ public class AccountController(
         return View();
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        await authService.Logout();
+        return LocalRedirect("/Account/Login");
+    }
+
 }

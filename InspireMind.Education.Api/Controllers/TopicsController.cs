@@ -6,10 +6,12 @@ using InspireMind.Education.Application.Features.Topics.Requests.Queries;
 using InspireMind.Education.Application.RequestParams;
 using InspireMind.Education.Application.Wrappers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
 namespace InspireMind.Education.Api.Controllers;
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class TopicsController(IMediator mediator) : AppControllerBase(mediator)

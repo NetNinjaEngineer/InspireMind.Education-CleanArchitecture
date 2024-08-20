@@ -11,6 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICoursesService, CoursesService>();
 builder.Services.AddScoped<ITopicService, TopicService>();
+builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
 
 builder.Services.AddHttpContextAccessor();
 

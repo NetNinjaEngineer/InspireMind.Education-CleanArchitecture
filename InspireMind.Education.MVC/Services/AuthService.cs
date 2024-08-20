@@ -1,6 +1,7 @@
 ﻿using InspireMind.Education.MVC.Contracts;
 using InspireMind.Education.MVC.Helpers;
 using InspireMind.Education.MVC.Models;
+using InspireMind.Education.MVC.Services.Base;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,7 +15,8 @@ namespace InspireMind.Education.MVC.Services;
 public class AuthService(
     IHttpClientFactory httpClientFactory,
     ILogger<AuthService> logger,
-    IHttpContextAccessor context) : IAuthService
+    IHttpContextAccessor context,
+    ILocalStorageService localStorageService) : BaseHttpService(localStorageService), IAuthService
 {
     private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
     private readonly ILogger<AuthService> _logger = logger;
@@ -44,18 +46,12 @@ public class AuthService(
 
             await context.HttpContext!.SignInAsync(user, new AuthenticationProperties
             {
-                IsPersistent = true
+                IsPersistent = false,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1),
+                RedirectUri = "/Account/Login"
             });
 
-            context.HttpContext?.Response.Cookies.Append(
-                key: "token",
-                value: responseBodyData.Data.Token,
-                options: new CookieOptions
-                {
-                    Secure = true,
-                    HttpOnly = true,
-                    Expires = DateTime.Now.AddDays(3)
-                });
+            _localStorageService.SetStorageValue("token", responseBodyData.Data.Token);
 
             return new LoginResultVM(
                 isEmailConfirmed: true,
@@ -121,5 +117,11 @@ public class AuthService(
             errorMessage: errorMessageBuilder.ToString()
             );
 
+    }
+
+    public async Task Logout()
+    {
+        _localStorageService.ClearStorage(["token"]);
+        await context.HttpContext!.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
 }

@@ -7,4 +7,5 @@ public interface IAuthService
     Task<bool> RegisterAsync(RegisterVM registerModel);
     Task<LoginResultVM> LoginAsync(LoginVM loginModel);
     Task<RequestConfirmEmailResult> RequestConfirmEmailAsync(RequestConfirmEmailVM requestConfirmEmailVM);
+    Task Logout();
 }

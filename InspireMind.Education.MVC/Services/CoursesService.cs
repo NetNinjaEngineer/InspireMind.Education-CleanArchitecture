@@ -7,9 +7,9 @@ using System.Text;
 namespace InspireMind.Education.MVC.Services;
 
 public class CoursesService(
-    IHttpContextAccessor contextAccessor,
-    IHttpClientFactory httpClientFactory)
-    : BaseHttpService(contextAccessor), ICoursesService
+    IHttpClientFactory httpClientFactory,
+    ILocalStorageService localStorageService)
+    : BaseHttpService(localStorageService), ICoursesService
 {
     public async Task<CourseDtoPagination?> GetPaginatedCourses(
         int? PageNumber,

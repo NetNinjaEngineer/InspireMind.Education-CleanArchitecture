@@ -1,12 +1,15 @@
-﻿namespace InspireMind.Education.MVC.Services.Base;
+﻿using InspireMind.Education.MVC.Contracts;
 
-public abstract class BaseHttpService(
-    IHttpContextAccessor contextAccessor)
+namespace InspireMind.Education.MVC.Services.Base;
+
+public abstract class BaseHttpService
 {
-    protected string? GetJwtToken()
+    protected ILocalStorageService _localStorageService;
+
+    protected BaseHttpService(ILocalStorageService localStorageService)
     {
-        string? tokenValue = default;
-        contextAccessor.HttpContext?.Request.Cookies.TryGetValue("token", out tokenValue);
-        return tokenValue;
+        _localStorageService = localStorageService;
     }
+
+    protected string? GetJwtToken() => _localStorageService.GetStorageValue<string>("token");
 }

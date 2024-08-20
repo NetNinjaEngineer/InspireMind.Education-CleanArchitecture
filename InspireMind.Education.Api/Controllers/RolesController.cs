@@ -1,9 +1,11 @@
 ﻿using InspireMind.Education.Api.Base;
 using InspireMind.Education.Application.Features.Roles.Requests.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InspireMind.Education.Api.Controllers;
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class RolesController(IMediator mediator) : AppControllerBase(mediator)

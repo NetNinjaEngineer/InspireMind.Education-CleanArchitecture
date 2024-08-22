@@ -18,5 +18,6 @@
   "PasswordResetSuccess": "Your password has been reset. Check your email.",
   "PasswordResetFailure": "Failed to reset your password.",
   "ResetPasswordLinkSent": "Reset password link has been sent.",
-  "ResetPasswordLinkFailure": "Failed to send reset password link. Please try again later."
+  "ResetPasswordLinkFailure": "Failed to send reset password link. Please try again later.",
+  "EmailTaken": "Email is already taken !"
 }

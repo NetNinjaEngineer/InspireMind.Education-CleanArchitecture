@@ -1,6 +1,8 @@
-﻿using InspireMind.Education.Application.Bases;
+﻿using FluentValidation;
+using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.Contracts.Identity;
 using InspireMind.Education.Application.Features.Authentication.Handlers.Result;
+using InspireMind.Education.Application.Features.Authentication.Validators;
 using InspireMind.Education.Application.Models.Identity;
 using InspireMind.Education.Identity.Entities;
 using InspireMind.Education.Identity.Helpers;
@@ -147,7 +149,7 @@ public class AuthService : BaseResponseHandler, IAuthService
             return Created(new RegisterResult(true));
         }
 
-        return Conflict<RegisterResult>(_localizer["InvalidCredentials"]);
+        return Conflict<RegisterResult>(_localizer["EmailTaken"]);
 
     }
 
@@ -162,17 +164,19 @@ public class AuthService : BaseResponseHandler, IAuthService
         }
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var encodedToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
 
         var parameters = new Dictionary<string, string>
         {
             { "email", user.Email! },
-            { "token", token }
+            { "token", encodedToken }
         };
 
         //  $"{Request.Scheme}://{Request.Host}/api/account/reset-password?token={token}&email={model.Email}";
-        var Request = _context.HttpContext!.Request;
+        //var Request = _context.HttpContext!.Request;
+        var resetPasswordUri = $"{forgetModel.ClientUri}/Account/ResetPassword";
 
-        var callbackUri = QueryHelpers.AddQueryString($"{Request.Scheme}://{Request.Host}/api/account/reset-password", parameters!);
+        var callbackUri = QueryHelpers.AddQueryString($"{resetPasswordUri}", parameters!);
 
         var emailBody = $@"
             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #1e1e2f; border-radius: 8px; color: #e1e1e1;'>
@@ -225,6 +229,12 @@ public class AuthService : BaseResponseHandler, IAuthService
 
     public async Task<Result<string>> ResetPassword(string email, string token, ResetPasswordModel resetModel)
     {
+        // password validation
+        var passwordValidator = new ResetPasswordModelValidator();
+        var validation = await passwordValidator.ValidateAsync(resetModel);
+        if (!validation.IsValid)
+            throw new ValidationException(validation.Errors);
+
         var user = await _userManager.FindByEmailAsync(email);
 
         if (user is null)

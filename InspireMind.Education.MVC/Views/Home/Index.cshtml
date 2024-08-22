@@ -1,11 +1,14 @@
-﻿@using InspireMind.Education.MVC.Helpers
+﻿@using InspireMind.Education.MVC.Contracts
+@using InspireMind.Education.MVC.Helpers
 @model CourseDtoPagination
 @inject IHttpContextAccessor context
+@inject ILocalStorageService localStorage
 
 @{
     ViewData["Title"] = "Index";
     var Request = context.HttpContext?.Request;
     var topics = ViewData["Topics"] as IReadOnlyList<TopicDto>;
+    var tokenValue = localStorage.GetStorageValue<string>("token");
 }
 
 <p id="pagedResultInfo"></p>
@@ -90,7 +93,7 @@
 
 @section Scripts {
     <script>
-
+        const tokenValue = "@tokenValue";
         document.getElementById("searchTerm").oninput = (event) => {
             const searchValue = event.target.value;
             $.ajax({
@@ -98,6 +101,9 @@
                 type: 'GET',
                 data: {
                     searchTerm: searchValue != null ? searchValue : ""
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${tokenValue}`)
                 },
                 success: function (response) {
                     const tableBody = document.getElementById('courseTableBody');
@@ -114,8 +120,6 @@
                                 `;
                         tableBody.appendChild(row)
                     });
-
-                    updatePagination(response.metaData);
                 },
                 error: function () {
                     console.log('Error retrieving data. Please try again.');
@@ -134,6 +138,9 @@
                     topicId: topicId,
                     pageSize: pageSize,
                     pageNumber: 1
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${tokenValue}`)
                 },
                 success: function (response) {
                     const tableBody = document.getElementById('courseTableBody');
@@ -171,8 +178,8 @@
                     pageSize: pageSize,
                     pageNumber: pageNumber
                 },
-                beforeSend: function () {
-                    // Disable pagination links while loading
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${tokenValue}`)
                     $('.pagination .page-link').addClass('disabled');
                 },
                 success: function (response) {
@@ -203,7 +210,6 @@
         }
 
         function updatePagination(metaData) {
-            console.log(metaData);
             const pagedResultInfo = document.getElementById('pagedResultInfo');
             pagedResultInfo.innerHTML = '';
             pagedResultInfo.textContent = `${metaData.currentPage}-${metaData.totalPages} of ${metaData.totalCount}`;

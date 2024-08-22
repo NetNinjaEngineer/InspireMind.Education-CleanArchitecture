@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "Session Timed Out";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="alert alert-danger" role="alert">
+    Your session has expired. Please <a href="@Url.Action("ForgetPassword", "Account")">start the password reset process again</a>.
+</div>

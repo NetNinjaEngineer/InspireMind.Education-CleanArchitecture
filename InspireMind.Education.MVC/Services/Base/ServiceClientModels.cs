@@ -102,6 +102,10 @@ namespace InspireMind.Education.MVC.Services.Base
         [System.ComponentModel.DataAnnotations.Required]
         public string Email { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("clientUri", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string ClientUri { get; set; }
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]

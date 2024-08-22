@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "ConfirmEmail";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
     var emailValue = ViewBag.Email as string;
     var tokenValue = ViewBag.Token as string;
     var apiBaseUrl = configuration.GetSection("ApiBaseUrl").Value;

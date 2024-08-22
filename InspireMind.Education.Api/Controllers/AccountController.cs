@@ -33,17 +33,19 @@ public class AccountController : AppControllerBase
     }
 
     [HttpPost("reset-password")]
-    public async Task<ActionResult<string>> ResetPassword(
+    public async Task<IActionResult> ResetPassword(
         [FromQuery] string email,
         [FromQuery] string token,
         [FromBody] ResetPasswordModel request)
     {
-        return CustomResult(await _mediator.Send(new ResetPasswordCommand
+        var result = await _mediator.Send(new ResetPasswordCommand
         {
             Email = email,
             Token = token,
             ResetRequest = request
-        }));
+        });
+
+        return Ok(result);
     }
 
     [HttpPost("request-confirm-email")]

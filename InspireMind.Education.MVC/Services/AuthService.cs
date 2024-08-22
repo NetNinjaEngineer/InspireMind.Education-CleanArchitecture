@@ -82,7 +82,7 @@ public class AuthService(
         return JsonSerializer.Deserialize<Result<RegisterResult>>(responseBody, _jsonSerializerSettings)!;
     }
 
-    public async Task<RequestConfirmEmailResult> RequestConfirmEmailAsync(RequestConfirmEmailVM requestConfirmEmailVM)
+    public async Task<Result<string>> RequestConfirmEmailAsync(RequestConfirmEmailVM requestConfirmEmailVM)
     {
         var client = _httpClientFactory.CreateClient(Constants.AuthClient);
         var responseMessage = await client.PostAsJsonAsync(
@@ -93,23 +93,7 @@ public class AuthService(
         var responseBody = await responseMessage.Content.ReadAsStringAsync();
 
         var response = JsonSerializer.Deserialize<Result<string>>(responseBody, _jsonSerializerSettings)!;
-
-        if (response.Succeeded)
-        {
-            return new RequestConfirmEmailResult(
-                successMessage: response.Data
-                );
-        }
-
-        var errorMessageBuilder = new StringBuilder();
-        foreach (var error in response.Errors)
-            errorMessageBuilder.AppendLine(error);
-
-
-        return new RequestConfirmEmailResult(
-            errorMessage: errorMessageBuilder.ToString()
-            );
-
+        return response!;
     }
 
     public async Task Logout()
@@ -163,5 +147,28 @@ public class AuthService(
         }
 
         return JsonSerializer.Deserialize<Result<string>>(responseBody, _jsonSerializerSettings)!;
+    }
+
+    public async Task<Result<string>> ConfirmEmail(string email, string token)
+    {
+        var client = _httpClientFactory.CreateClient(Constants.AuthClient);
+        var decodedToken = Encoding.UTF8.GetString(Convert.FromBase64String(token));
+
+        var requestUri = QueryHelpers.AddQueryString(
+           Constants.ConfirmEmailEndPointUri,
+           new Dictionary<string, string>
+           {
+            { "email", email },
+            { "token", decodedToken }
+           });
+
+        var requestMessage = new HttpRequestMessage(HttpMethod.Post, requestUri);
+
+        using var responseMessage = await client.SendAsync(requestMessage);
+
+        var responseBody = await responseMessage.Content.ReadAsStringAsync();
+
+        var response = JsonSerializer.Deserialize<Result<string>>(responseBody, _jsonSerializerSettings)!;
+        return response!;
     }
 }

@@ -48,10 +48,10 @@ public class AccountController(
         if (!result.Succeeded)
         {
             ModelState.AddModelError(string.Empty, result.Message);
-            return View();
+            return View(registerRequest);
         }
 
-        return RedirectToAction(nameof(Login));
+        return View("RequireConfirmEmail");
 
     }
     #endregion
@@ -69,25 +69,58 @@ public class AccountController(
     {
         var requestConfirmEmailResponse = await authService.RequestConfirmEmailAsync(confirmEmailRequest);
 
-        if (!requestConfirmEmailResponse.IsSuccess)
+        if (!requestConfirmEmailResponse.Succeeded)
         {
-            ModelState.AddModelError(string.Empty, requestConfirmEmailResponse.ErrorMessage!);
-            return View();
+            ModelState.AddModelError(string.Empty, requestConfirmEmailResponse.Message!);
+            return View(confirmEmailRequest);
         }
 
-        ViewBag.EmailConfirmationSent = requestConfirmEmailResponse.SuccessMessage;
-
-        return View();
+        return View("RequestEmailSucessfullConfirmation");
 
     }
 
     [HttpGet]
     public IActionResult ConfirmEmail([FromQuery] string email, [FromQuery] string token)
     {
-        ViewBag.Email = email;
-        ViewBag.Token = token;
+        if (IsEmailAndTokenValid(email, token))
+        {
+            HttpContext.Session.SetString("email", email);
+            HttpContext.Session.SetString("token", token);
+            return View();
+        }
+
+        return RedirectToAction(nameof(Login));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ConfirmEmail()
+    {
+        string email = HttpContext.Session.GetString("email");
+        string token = HttpContext.Session.GetString("token");
+
+        if (email == null || token == null)
+        {
+            ModelState.AddModelError(string.Empty, "Session has timed out. Please start the process again.");
+            return View("SessionTimeout");
+        }
+
+        if (IsEmailAndTokenValid(email, token))
+        {
+            var result = await authService.ConfirmEmail(email, token);
+
+            if (result.Succeeded)
+            {
+                HttpContext.Session.Clear();
+                return View("EmailConfirmed");
+            }
+
+            AddErrorsToModelState(result);
+        }
+
         return View();
     }
+
     #endregion
 
     #region Logout

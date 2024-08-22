@@ -11,5 +11,6 @@ public static class Constants
     public const string TopicsEndPointUri = "api/topics";
     public const string RegisterEndPointUri = "api/account/register";
     public const string RequestConfirmEmailEndPointUri = "api/account/request-confirm-email";
+    public const string ConfirmEmailEndPointUri = "api/account/confirm-email";
     public static List<string> PageSizes = ["5", "10", "15", "20", "50"];
 }

@@ -350,8 +350,8 @@ public class AuthService : BaseResponseHandler, IAuthService
 
         if (user is not null)
         {
-            var decodedToken = Encoding.UTF8.GetString(Convert.FromBase64String(token));
-            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
             return result.Succeeded ?
                 Success<string>(_localizer["EmailConfirmed", user.Email!]) :
                 BadRequest<string>(_localizer["EmailNotConfirmed", user.Email!]);

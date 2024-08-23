@@ -1,18 +1,25 @@
 ﻿namespace InspireMind.Education.Application.Features.Authentication.Validators;
 using FluentValidation;
 using InspireMind.Education.Application.Models.Identity;
+using Microsoft.Extensions.Localization;
 
 public class ResetPasswordModelValidator : AbstractValidator<ResetPasswordModel>
 {
-    public ResetPasswordModelValidator()
+    private readonly IStringLocalizer<ResetPasswordModelValidator> _localizer;
+    public ResetPasswordModelValidator(IStringLocalizer<ResetPasswordModelValidator> localizer)
     {
+        _localizer = localizer;
+
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Password is required.")
-            .MinimumLength(6).WithMessage("The Password must be at least 6 characters long.")
-            .MaximumLength(100).WithMessage("The Password must be at most 100 characters long.");
+           .NotNull().WithMessage(string.Format(_localizer["notNull", "Password"]))
+           .NotEmpty().WithMessage(string.Format(_localizer["notEmpty"], "Password"))
+           .MinimumLength(6).WithMessage(string.Format(_localizer["minLength"], "Password", 6))
+           .MaximumLength(100).WithMessage(string.Format(_localizer["maxLength"], 100));
 
         RuleFor(x => x.ConfirmPassword)
-            .NotEmpty().WithMessage("Confirm password is required.")
-            .Equal(x => x.Password).WithMessage("The password and confirmation password do not match.");
+            .NotNull().WithMessage(string.Format(_localizer["notNull", "Confirm Password"]))
+            .NotEmpty().WithMessage(string.Format(_localizer["notEmpty"], "Confirm Password"))
+            .Equal(x => x.Password).WithMessage(string.Format(_localizer["matched"], "Password", "Confirmation password"));
+
     }
 }

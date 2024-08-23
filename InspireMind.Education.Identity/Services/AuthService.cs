@@ -2,12 +2,9 @@
 using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.Contracts.Identity;
 using InspireMind.Education.Application.Features.Authentication.Handlers.Result;
-using InspireMind.Education.Application.Features.Authentication.Validators;
 using InspireMind.Education.Application.Models.Identity;
 using InspireMind.Education.Identity.Entities;
 using InspireMind.Education.Identity.Helpers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Localization;
@@ -25,29 +22,29 @@ public class AuthService : BaseResponseHandler, IAuthService
     private readonly SignInManager<AppUser> _signInManager;
     private readonly JwtSettings _jwtSettings;
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
-    private readonly IHttpContextAccessor _context;
     private readonly IEmailsService _emailsService;
     private readonly ILogger<AuthService> _logger;
-    private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IValidator<RegisterModel> _registerValidator;
+    private readonly IValidator<ResetPasswordModel> _resetPasswordValidator;
 
     public AuthService(
         IStringLocalizer<BaseResponseHandler> localizer,
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
         IOptions<JwtSettings> jwtSettings,
-        IHttpContextAccessor context,
         IEmailsService emailsService,
         ILogger<AuthService> logger,
-        IWebHostEnvironment webHostEnvironment) : base(localizer)
+        IValidator<RegisterModel> registerValidator,
+        IValidator<ResetPasswordModel> resetPasswordValidator) : base(localizer)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _jwtSettings = jwtSettings.Value;
         _jwtSecurityTokenHandler = new();
-        _context = context;
         _emailsService = emailsService;
         _logger = logger;
-        _webHostEnvironment = webHostEnvironment;
+        _registerValidator = registerValidator;
+        _resetPasswordValidator = resetPasswordValidator;
     }
 
     public async Task<Result<LoginResult>> Login(LoginModel request)
@@ -118,6 +115,13 @@ public class AuthService : BaseResponseHandler, IAuthService
 
     public async Task<Result<RegisterResult>> Register(RegisterModel request)
     {
+        var validator = _registerValidator.Validate(request);
+        if (!validator.IsValid)
+        {
+            var error = validator.Errors.Select(e => e.ErrorMessage).FirstOrDefault();
+            return UnprocessableEntity<RegisterResult>(error!);
+        }
+
         var user = await _userManager.FindByNameAsync(request.UserName);
         if (user is not null)
         {
@@ -230,10 +234,9 @@ public class AuthService : BaseResponseHandler, IAuthService
     public async Task<Result<string>> ResetPassword(string email, string token, ResetPasswordModel resetModel)
     {
         // password validation
-        var passwordValidator = new ResetPasswordModelValidator();
-        var validation = await passwordValidator.ValidateAsync(resetModel);
-        if (!validation.IsValid)
-            throw new ValidationException(validation.Errors);
+        var validationResult = _resetPasswordValidator.Validate(resetModel);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
         var user = await _userManager.FindByEmailAsync(email);
 

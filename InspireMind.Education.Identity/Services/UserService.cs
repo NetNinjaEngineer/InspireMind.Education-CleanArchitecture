@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.Contracts.Identity;
 using InspireMind.Education.Application.DTOs.User;
@@ -18,15 +19,18 @@ public class UserService : BaseResponseHandler, IUser
     private readonly IHttpContextAccessor _context;
     private readonly UserManager<AppUser> _userManager;
     private readonly IMapper _mapper;
+    private readonly IValidator<UserForUpdateDto> _userUpdateValidator;
 
     public UserService(IHttpContextAccessor context,
                        UserManager<AppUser> userManager,
                        IMapper mapper,
-                       IStringLocalizer<BaseResponseHandler> localizer) : base(localizer)
+                       IStringLocalizer<BaseResponseHandler> localizer,
+                       IValidator<UserForUpdateDto> userUpdateValidator) : base(localizer)
     {
         _context = context;
         _userManager = userManager;
         _mapper = mapper;
+        _userUpdateValidator = userUpdateValidator;
     }
 
     public string? Id => _context.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
@@ -66,5 +70,29 @@ public class UserService : BaseResponseHandler, IUser
         return user == null ?
             NotFound<UserListDto>(_localizer["UnknownUser"]) :
             Success(_mapper.Map<UserListDto>(user));
+    }
+
+    public async Task<Result<string>> UpdateUserAsync(Guid userId, UserForUpdateDto newUser)
+    {
+        var validationResult = _userUpdateValidator.Validate(newUser);
+        if (!validationResult.IsValid)
+            return UnprocessableEntity<string>(validationResult.Errors.Select(e => e.ErrorMessage).FirstOrDefault()!);
+
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+
+        if (user == null)
+            return NotFound<string>(_localizer["UnknownUser"]);
+
+        _mapper.Map(newUser, user);
+
+        var result = await _userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+        {
+            var errors = result.Errors.Select(e => e.Description).ToList();
+            return BadRequest<string>(_localizer["UpdateFailed"], errors);
+        }
+
+        return Success(string.Empty);
     }
 }

@@ -12,5 +12,7 @@ public class UsersProfile : Profile
                 opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.FullName,
                 opt => opt.MapFrom(src => string.Concat(src.FirstName, " ", src.LastName)));
+
+        CreateMap<UserForUpdateDto, AppUser>();
     }
 }

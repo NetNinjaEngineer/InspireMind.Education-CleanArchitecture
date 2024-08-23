@@ -10,4 +10,5 @@ public interface IUser
     string? Id { get; }
     Task<Pagination<UserListDto>> GetPaginatedUsersAsync(UserRequestParameters userParams);
     Task<Result<UserListDto>> GetUserAsync(Guid userId);
+    Task<Result<string>> UpdateUserAsync(Guid userId, UserForUpdateDto newUser);
 }

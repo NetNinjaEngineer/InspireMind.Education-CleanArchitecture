@@ -19,5 +19,10 @@
   "PasswordResetFailure": "Failed to reset your password.",
   "ResetPasswordLinkSent": "Reset password link has been sent.",
   "ResetPasswordLinkFailure": "Failed to send reset password link. Please try again later.",
-  "EmailTaken": "Email is already taken !"
+  "EmailTaken": "Email is already taken !",
+  "Successfully": "Operation done successfully.",
+  "UpdateFailed": "There is a problems when updating the data.",
+  "maxLength": "{0} must be at most 100 characters long.",
+  "minLength": "The {0} must be at least {1} characters long.",
+  "matched": "The {0} and {1} do not match."
 }

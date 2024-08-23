@@ -1,6 +1,7 @@
 ﻿using InspireMind.Education.Api.Base;
 using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.DTOs.User;
+using InspireMind.Education.Application.Features.Users.Requests.Commands;
 using InspireMind.Education.Application.Features.Users.Requests.Queries;
 using InspireMind.Education.Application.RequestParams;
 using InspireMind.Education.Application.Wrappers;
@@ -27,6 +28,15 @@ namespace InspireMind.Education.Api.Controllers
         public async Task<ActionResult<Result<UserListDto>>> GetSingleUser(Guid userId)
         {
             return CustomResult(await _mediator.Send(new GetSingleUserQuery { UserId = userId }));
+        }
+
+        [HttpPut]
+        [Route("{userId:guid}")]
+        [ProducesResponseType(typeof(Result<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Result<string>>> UpdateUser(Guid userId, UserForUpdateDto updateModel)
+        {
+            return CustomResult(await _mediator.Send(new UpdateUserCommand(userId, updateModel)));
         }
     }
 }

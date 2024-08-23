@@ -38,5 +38,14 @@ namespace InspireMind.Education.Api.Controllers
         {
             return CustomResult(await _mediator.Send(new UpdateUserCommand(userId, updateModel)));
         }
+
+        [HttpDelete]
+        [Route("{userId:guid}")]
+        [ProducesResponseType(typeof(Result<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Result<string>>> DeleteUser(Guid userId)
+        {
+            return CustomResult(await _mediator.Send(new DeleteUserCommand(userId)));
+        }
     }
 }

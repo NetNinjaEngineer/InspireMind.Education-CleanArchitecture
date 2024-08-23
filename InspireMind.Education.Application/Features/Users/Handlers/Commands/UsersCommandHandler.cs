@@ -4,9 +4,14 @@ using InspireMind.Education.Application.Features.Users.Requests.Commands;
 using MediatR;
 
 namespace InspireMind.Education.Application.Features.Users.Handlers.Commands;
-public class UsersCommandHandler(IUser user) : IRequestHandler<UpdateUserCommand, Result<string>>
+public class UsersCommandHandler(IUser user) : IRequestHandler<UpdateUserCommand, Result<string>>,
+    IRequestHandler<DeleteUserCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(UpdateUserCommand request,
                                        CancellationToken cancellationToken)
         => await user.UpdateUserAsync(request.UserId, request.UpdateModel);
+
+    public async Task<Result<string>> Handle(DeleteUserCommand request,
+                                             CancellationToken cancellationToken)
+        => await user.DeleteUserAsync(request.UserId);
 }

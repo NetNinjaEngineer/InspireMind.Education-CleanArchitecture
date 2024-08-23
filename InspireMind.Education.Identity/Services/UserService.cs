@@ -35,6 +35,24 @@ public class UserService : BaseResponseHandler, IUser
 
     public string? Id => _context.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
 
+    public async Task<Result<string>> DeleteUserAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+
+        if (user == null)
+            return NotFound<string>(_localizer["UnknownUser"]);
+
+        var result = await _userManager.DeleteAsync(user);
+
+        if (!result.Succeeded)
+        {
+            var errors = result.Errors.Select(e => e.Description).ToList();
+            return BadRequest<string>(_localizer["DeleteFailed"], errors);
+        }
+
+        return Success(string.Empty);
+    }
+
     public async Task<Pagination<UserListDto>> GetPaginatedUsersAsync(UserRequestParameters userParams)
     {
         var users = _userManager.Users.AsQueryable();

@@ -24,5 +24,6 @@
   "UpdateFailed": "There is a problems when updating the data.",
   "maxLength": "{0} must be at most 100 characters long.",
   "minLength": "The {0} must be at least {1} characters long.",
-  "matched": "The {0} and {1} do not match."
+  "matched": "The {0} and {1} do not match.",
+  "DeleteFailed": "There is some problems when deleting process."
 }

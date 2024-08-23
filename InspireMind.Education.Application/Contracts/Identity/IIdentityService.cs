@@ -1,15 +1,14 @@
-﻿//namespace CleanArchitecture.Application.Contracts.Identity
-//{
-//    public interface IIdentityService
-//    {
-//        Task<string?> GetUserNameAsync(string userId);
+﻿namespace InspireMind.Education.Application.Contracts.Identity;
 
-//        Task<bool> IsInRoleAsync(string userId, string role);
+public interface IIdentityService
+{
+    //Task<string?> GetUserNameAsync(string userId);
 
-//        Task<bool> AuthorizeAsync(string userId, string policyName);
-//        Task<bool> HasClaim(string userId, string claimType, string claimValue);
+    //Task<bool> IsInRoleAsync(string userId, string role);
 
-//        Task<bool> ValidateToken(string token);
+    //Task<bool> AuthorizeAsync(string userId, string policyName);
+    //Task<bool> HasClaim(string userId, string claimType, string claimValue);
 
-//    }
-//}
+    //Task<bool> ValidateToken(string token);
+
+}

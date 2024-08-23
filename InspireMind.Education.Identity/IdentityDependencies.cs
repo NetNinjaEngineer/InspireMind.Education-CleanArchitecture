@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 using System.Text;
 
 namespace InspireMind.Education.Identity;
@@ -49,8 +50,10 @@ public static class IdentityDependencies
 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IEmailsService, EmailService>();
-        services.AddScoped<IUser, CurrentUserService>();
+        services.AddScoped<IUser, UserService>();
         services.AddScoped<IRoleService, RoleService>();
+
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         return services;
     }

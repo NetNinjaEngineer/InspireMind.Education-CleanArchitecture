@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
 
-namespace InspireMind.Education.Application.Middleware.Localization;
+namespace InspireMind.Education.Api.Middleware.Localization;
 
 public class JsonStringLocalizerFactory : IStringLocalizerFactory
 {

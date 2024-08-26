@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 
-namespace InspireMind.Education.Application.Middleware.Localization;
+namespace InspireMind.Education.Api.Middleware.Localization;
 
 public class JsonStringLocalizer : IStringLocalizer
 {

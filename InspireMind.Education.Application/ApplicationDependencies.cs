@@ -1,13 +1,8 @@
 ﻿using FluentValidation;
 using InspireMind.Education.Application.Behaviors;
-using InspireMind.Education.Application.Middleware.Localization;
 using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
-using System.Globalization;
 using System.Reflection;
 
 namespace InspireMind.Education.Application;
@@ -26,24 +21,6 @@ public static class ApplicationDependencies
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-
-        services.AddDistributedMemoryCache();
-
-        services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
-
-        services.Configure<RequestLocalizationOptions>(options =>
-        {
-            var supportedCultures = new[]
-            {
-                new CultureInfo("ar-EG"),
-                new CultureInfo("en-US"),
-                new CultureInfo("en")
-            };
-
-            options.SupportedCultures = supportedCultures;
-            options.DefaultRequestCulture = new RequestCulture(supportedCultures[1]);
-
-        });
 
         return services;
     }

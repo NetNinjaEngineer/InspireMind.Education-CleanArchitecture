@@ -12,4 +12,6 @@ public interface IUser
     Task<Result<UserListDto>> GetUserAsync(Guid userId);
     Task<Result<string>> UpdateUserAsync(Guid userId, UserForUpdateDto newUser);
     Task<Result<string>> DeleteUserAsync(Guid userId);
+    Task<Result<IEnumerable<string>>> GetCurrentUserRoles();
+    Task<Result<IEnumerable<string>>> GetCurrentUserClaims();
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CleanArchitecture.Application.Contracts.Identity;
 using FluentValidation;
 using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.Contracts.Identity;
@@ -14,35 +15,22 @@ using Microsoft.Extensions.Localization;
 using System.Security.Claims;
 
 namespace InspireMind.Education.Identity.Services;
-public class UserService : BaseResponseHandler, IUser
+public class UserService(IHttpContextAccessor context,
+                   UserManager<AppUser> userManager,
+                   IMapper mapper,
+                   IStringLocalizer<BaseResponseHandler> localizer,
+                   IRoleService roleService) : BaseResponseHandler(localizer), IUser
 {
-    private readonly IHttpContextAccessor _context;
-    private readonly UserManager<AppUser> _userManager;
-    private readonly IMapper _mapper;
-    private readonly IValidator<UserForUpdateDto> _userUpdateValidator;
-
-    public UserService(IHttpContextAccessor context,
-                       UserManager<AppUser> userManager,
-                       IMapper mapper,
-                       IStringLocalizer<BaseResponseHandler> localizer,
-                       IValidator<UserForUpdateDto> userUpdateValidator) : base(localizer)
-    {
-        _context = context;
-        _userManager = userManager;
-        _mapper = mapper;
-        _userUpdateValidator = userUpdateValidator;
-    }
-
-    public string? Id => _context.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+    public string? Id => context.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
 
     public async Task<Result<string>> DeleteUserAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var user = await userManager.FindByIdAsync(userId.ToString());
 
         if (user == null)
             return NotFound<string>(_localizer["UnknownUser"]);
 
-        var result = await _userManager.DeleteAsync(user);
+        var result = await userManager.DeleteAsync(user);
 
         if (!result.Succeeded)
         {
@@ -53,13 +41,19 @@ public class UserService : BaseResponseHandler, IUser
         return Success(string.Empty);
     }
 
+    public async Task<Result<IEnumerable<string>>> GetCurrentUserClaims()
+        => await roleService.GetUserClaims(Id!);
+
+    public async Task<Result<IEnumerable<string>>> GetCurrentUserRoles()
+        => await roleService.GetUserRoles(Id!);
+
     public async Task<Pagination<UserListDto>> GetPaginatedUsersAsync(UserRequestParameters userParams)
     {
-        var users = _userManager.Users.AsQueryable();
+        var users = userManager.Users.AsQueryable();
 
         if (!string.IsNullOrEmpty(userParams.SearchTerm))
         {
-            users = _userManager.Users.Where(u => u.FirstName!.Contains(userParams.SearchTerm)
+            users = userManager.Users.Where(u => u.FirstName!.Contains(userParams.SearchTerm)
                                                   || u.LastName!.Contains(userParams.SearchTerm)
                                                   || u.UserName!.Contains(userParams.SearchTerm)
                                                   || u.Email!.Contains(userParams.SearchTerm));
@@ -73,7 +67,7 @@ public class UserService : BaseResponseHandler, IUser
             .AsNoTracking()
             .ToListAsync(); // immediate execution
 
-        var mappedResult = _mapper.Map<List<UserListDto>>(paginatedResult);
+        var mappedResult = mapper.Map<List<UserListDto>>(paginatedResult);
 
         return Pagination<UserListDto>.ToPaginatedResult(userParams.PageNumber,
                                                          userParams.PageSize,
@@ -83,27 +77,23 @@ public class UserService : BaseResponseHandler, IUser
 
     public async Task<Result<UserListDto>> GetUserAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var user = await userManager.FindByIdAsync(userId.ToString());
 
         return user == null ?
             NotFound<UserListDto>(_localizer["UnknownUser"]) :
-            Success(_mapper.Map<UserListDto>(user));
+            Success(mapper.Map<UserListDto>(user));
     }
 
     public async Task<Result<string>> UpdateUserAsync(Guid userId, UserForUpdateDto newUser)
     {
-        var validationResult = _userUpdateValidator.Validate(newUser);
-        if (!validationResult.IsValid)
-            return UnprocessableEntity<string>(validationResult.Errors.Select(e => e.ErrorMessage).FirstOrDefault()!);
-
-        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var user = await userManager.FindByIdAsync(userId.ToString());
 
         if (user == null)
             return NotFound<string>(_localizer["UnknownUser"]);
 
-        _mapper.Map(newUser, user);
+        mapper.Map(newUser, user);
 
-        var result = await _userManager.UpdateAsync(user);
+        var result = await userManager.UpdateAsync(user);
 
         if (!result.Succeeded)
         {

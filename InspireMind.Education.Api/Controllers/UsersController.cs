@@ -1,4 +1,5 @@
-﻿using InspireMind.Education.Api.Base;
+﻿using Asp.Versioning;
+using InspireMind.Education.Api.Base;
 using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.Features.Users.DTOs;
 using InspireMind.Education.Application.Features.Users.Requests.Commands;
@@ -17,8 +18,9 @@ namespace InspireMind.Education.Api.Controllers
     /// <remarks>
     /// This controller handles CRUD operations for users, including retrieving, updating, and deleting user data.
     /// </remarks>
+    [ApiVersion("1.0")]
     [Authorize]
-    [Route("api/users")]
+    [Route("api/v{version:apiVersion}/users")]
     [ApiController]
     public class UsersController : AppControllerBase
     {
@@ -96,5 +98,28 @@ namespace InspireMind.Education.Api.Controllers
             var result = await _mediator.Send(new DeleteUserCommand { UserId = userId });
             return CustomResult(result);
         }
+
+        /// <summary>
+        /// Retrieves the roles assigned to the currently logged-in user.
+        /// </summary>
+        /// <returns>A result containing an enumerable of the roles assigned to the current user.</returns>
+        /// <response code="200">Returns the list of roles assigned to the logged-in user.</response>
+        [HttpGet]
+        [Route("loggedInUser/roles")]
+        [ProducesResponseType(typeof(Result<IEnumerable<string>>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<Result<IEnumerable<string>>>> GetCurrentUserRoles()
+            => CustomResult(await _mediator.Send(new GetCurrentUserRolesQuery()));
+
+        /// <summary>
+        /// Retrieves the claims associated with the currently logged-in user.
+        /// </summary>
+        /// <returns>A result containing an enumerable of the claims assigned to the current user.</returns>
+        /// <response code="200">Returns the list of claims assigned to the logged-in user.</response>
+        [HttpGet]
+        [Route("loggedInUser/claims")]
+        [ProducesResponseType(typeof(Result<IEnumerable<string>>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<Result<IEnumerable<string>>>> GetCurrentUserClaims()
+            => CustomResult(await _mediator.Send(new GetCurrentUserClaimsQuery()));
+
     }
 }

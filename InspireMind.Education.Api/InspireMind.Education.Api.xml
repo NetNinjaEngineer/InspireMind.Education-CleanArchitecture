@@ -8,7 +8,6 @@
             <summary>
             Manages operations related to authentication, including registration, login, password management, and email confirmation.
             </summary>
-            <param name="mediator">The mediator service instance used for handling commands and queries.</param>
         </member>
         <member name="M:InspireMind.Education.Api.Controllers.AccountController.#ctor(MediatR.IMediator)">
             <summary>
@@ -148,7 +147,6 @@
             <summary>
             Manages operations related to user roles, including creating, assigning, updating, and removing roles.
             </summary>
-            <param name="mediator">The mediator service instance used for handling commands and queries.</param>
         </member>
         <member name="M:InspireMind.Education.Api.Controllers.RolesController.#ctor(MediatR.IMediator)">
             <summary>
@@ -189,6 +187,33 @@
             <param name="id">The ID of the role to remove.</param>
             <returns>A response indicating the success or failure of the role removal.</returns>
             <response code="200">Returns a confirmation message indicating the role has been successfully removed.</response>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:InspireMind.Education.Api.Controllers.RolesController.ListAllRoles" -->
+        <member name="M:InspireMind.Education.Api.Controllers.RolesController.GetUserRoles(System.Guid)">
+            <summary>
+            Retrieves the roles assigned to a specific user.
+            </summary>
+            <param name="userId">The unique identifier of the user.</param>
+            <returns>A result containing an enumerable of the user's roles.</returns>
+            <response code="200">Returns the list of roles assigned to the user.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.RolesController.GetUserClaims(System.Guid)">
+            <summary>
+            Retrieves the claims associated with a specific user.
+            </summary>
+            <param name="userId">The unique identifier of the user.</param>
+            <returns>A result containing an enumerable of the user's claims.</returns>
+            <response code="200">Returns the list of claims assigned to the user.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.RolesController.AssignClaim(System.Guid,System.String,System.String)">
+            <summary>
+            Assigns a claim to a specific user.
+            </summary>
+            <param name="userId">The unique identifier of the user.</param>
+            <param name="claimType">The type of the claim to be assigned.</param>
+            <param name="claimValue">The value of the claim to be assigned.</param>
+            <returns>A result containing the status of the operation.</returns>
+            <response code="200">Returns the status of the claim assignment operation.</response>
         </member>
         <member name="T:InspireMind.Education.Api.Controllers.TopicsController">
             <summary>
@@ -312,6 +337,20 @@
             <returns>A result indicating the success or failure of the delete operation.</returns>
             <response code="200">Returns a result indicating the delete status.</response>
             <response code="404">If the user to be deleted is not found.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.UsersController.GetCurrentUserRoles">
+            <summary>
+            Retrieves the roles assigned to the currently logged-in user.
+            </summary>
+            <returns>A result containing an enumerable of the roles assigned to the current user.</returns>
+            <response code="200">Returns the list of roles assigned to the logged-in user.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.UsersController.GetCurrentUserClaims">
+            <summary>
+            Retrieves the claims associated with the currently logged-in user.
+            </summary>
+            <returns>A result containing an enumerable of the claims assigned to the current user.</returns>
+            <response code="200">Returns the list of claims assigned to the logged-in user.</response>
         </member>
     </members>
 </doc>

@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Contracts\Persistence\" />
-    <Folder Include="Features\Roles\Requests\Queries\" />
     <Folder Include="Features\Topics\Requests\Commands\" />
   </ItemGroup>
 

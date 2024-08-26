@@ -1,4 +1,5 @@
-﻿using InspireMind.Education.Api.Middleware.Localization;
+﻿using Asp.Versioning;
+using InspireMind.Education.Api.Middleware.Localization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Localization;
 using System.Globalization;
@@ -36,6 +37,25 @@ public static class ApiDependencies
                     .AllowAnyMethod()
                     .WithOrigins(clientUrl));
         });
+
+        services.AddApiVersioning(options =>
+        {
+            options.DefaultApiVersion = new ApiVersion(1);
+            options.ReportApiVersions = true;
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.ApiVersionReader = ApiVersionReader.Combine(
+                new UrlSegmentApiVersionReader(),
+                new QueryStringApiVersionReader("api-version"),
+                new HeaderApiVersionReader("X-Version"),
+                new MediaTypeApiVersionReader("ver")
+                );
+        })
+            .AddMvc()
+            .AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
 
         return services;
     }

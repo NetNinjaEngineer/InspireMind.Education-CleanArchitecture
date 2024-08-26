@@ -10,11 +10,9 @@ namespace CleanArchitecture.Application.Contracts.Identity
         Task<Result<string>> DeleteRole(DeleteRoleCommand request);
         //Task<Result<string>> AddClaimToRole(AddClaimToRoleCommand request);
         Task<Result<string>> AddRoleToUser(AssignRoleToUserCommand request);
-        //Task<Result<string>> AddClaimToUser(AssignClaimToUserCommand request);
+        Task<Result<string>> AddClaimToUser(AssignClaimToUserCommand request);
         Task<Result<IEnumerable<string>>> GetUserRoles(string userId);
         Task<Result<IEnumerable<string>>> GetUserClaims(string userId);
-        Task<Result<IEnumerable<string>>> GetRoleClaims(string roleName);
-        Task<Result<IEnumerable<string>>> GetAllRoles();
-        Task<Result<IEnumerable<string>>> GetAllClaims();
+        Task<Result<IEnumerable<string?>>> GetAllRoles();
     }
 }

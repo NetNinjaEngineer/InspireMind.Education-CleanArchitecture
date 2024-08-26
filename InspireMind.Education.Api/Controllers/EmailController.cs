@@ -1,4 +1,5 @@
-﻿using InspireMind.Education.Api.Base;
+﻿using Asp.Versioning;
+using InspireMind.Education.Api.Base;
 using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.Features.Emails.Requests.Commands;
 using InspireMind.Education.Application.Models.Identity;
@@ -14,8 +15,9 @@ namespace InspireMind.Education.Api.Controllers
     /// <remarks>
     /// This controller provides an endpoint for sending emails by providing the necessary email parameters.
     /// </remarks>
+    [ApiVersion("1.0")]
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/email")]
     [ApiController]
     public class EmailController : AppControllerBase
     {

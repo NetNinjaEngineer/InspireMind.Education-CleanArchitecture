@@ -4,45 +4,26 @@ using InspireMind.Education.Application.Features.Roles.Requests.Commands;
 using InspireMind.Education.Identity.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
+using System.Security.Claims;
 
 namespace InspireMind.Education.Identity.Services;
-public class RoleService : BaseResponseHandler, IRoleService
+public class RoleService(IStringLocalizer<BaseResponseHandler> localizer,
+                         RoleManager<IdentityRole> roleManager,
+                         UserManager<AppUser> userManager) : BaseResponseHandler(localizer), IRoleService
 {
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly UserManager<AppUser> _userManager;
-
-    public RoleService(
-        IStringLocalizer<BaseResponseHandler> localizer,
-        RoleManager<IdentityRole> roleManager,
-        UserManager<AppUser> userManager) : base(localizer)
-    {
-        _roleManager = roleManager;
-        _userManager = userManager;
-    }
-
-    //public Task<Result<string>> AddClaimToRole(AddClaimToRoleCommand request)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public Task<Result<string>> AddClaimToUser(AssignClaimToUserCommand request)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
     public async Task<Result<string>> AddRoleToUser(AssignRoleToUserCommand request)
     {
-        var user = await _userManager.FindByIdAsync(request.UserId);
+        var user = await userManager.FindByIdAsync(request.UserId);
 
         if (user is null)
             return BadRequest<string>(_localizer["UserNotExists", request.UserId]);
 
-        var roleExists = await _roleManager.RoleExistsAsync(request.RoleName);
+        var roleExists = await roleManager.RoleExistsAsync(request.RoleName);
 
         if (!roleExists)
             return BadRequest<string>(_localizer["RoleNotExists", request.RoleName]);
 
-        var result = await _userManager.AddToRoleAsync(user, request.RoleName);
+        var result = await userManager.AddToRoleAsync(user, request.RoleName);
 
         return result.Succeeded ?
             Success<string>(_localizer["RoleAssignedSuccessfully", request.RoleName]) :
@@ -52,11 +33,11 @@ public class RoleService : BaseResponseHandler, IRoleService
 
     public async Task<Result<string>> CreateRole(CreateRoleCommand request)
     {
-        var roleExists = await _roleManager.RoleExistsAsync(request.RoleName);
+        var roleExists = await roleManager.RoleExistsAsync(request.RoleName);
         if (!roleExists)
         {
             var identityRole = new IdentityRole(request.RoleName);
-            await _roleManager.CreateAsync(identityRole);
+            await roleManager.CreateAsync(identityRole);
             return Created<string>(_localizer["RoleCreatedSuccessfully", request.RoleName]);
         }
 
@@ -65,11 +46,11 @@ public class RoleService : BaseResponseHandler, IRoleService
 
     public async Task<Result<string>> DeleteRole(DeleteRoleCommand request)
     {
-        var role = await _roleManager.FindByIdAsync(request.RoleId);
+        var role = await roleManager.FindByIdAsync(request.RoleId);
 
         if (role is not null)
         {
-            var result = await _roleManager.DeleteAsync(role);
+            var result = await roleManager.DeleteAsync(role);
 
             return result.Succeeded ?
                 Success<string>(_localizer["RoleDeleted", request.RoleId]) :
@@ -82,11 +63,11 @@ public class RoleService : BaseResponseHandler, IRoleService
 
     public async Task<Result<string>> EditRole(EditRoleCommand request)
     {
-        var role = await _roleManager.FindByIdAsync(request.RoleId);
+        var role = await roleManager.FindByIdAsync(request.RoleId);
         if (role is not null)
         {
             role.Name = request.RoleName;
-            var result = await _roleManager.UpdateAsync(role);
+            var result = await roleManager.UpdateAsync(role);
 
             return result.Succeeded ?
                 Success<string>(_localizer["RoleUpdated", request.RoleId]) :
@@ -98,28 +79,48 @@ public class RoleService : BaseResponseHandler, IRoleService
 
     }
 
-    public Task<Result<IEnumerable<string>>> GetAllClaims()
+    public async Task<Result<IEnumerable<string?>>> GetAllRoles()
     {
-        throw new NotImplementedException();
+        return Success(roleManager.Roles.AsEnumerable().Select(x => x.Name));
     }
 
-    public Task<Result<IEnumerable<string>>> GetAllRoles()
+
+    public async Task<Result<string>> AddClaimToUser(AssignClaimToUserCommand request)
     {
-        throw new NotImplementedException();
+        var user = await userManager.FindByIdAsync(request.UserId.ToString());
+        if (user == null)
+        {
+            return BadRequest<string>(_localizer["UserNotFound", request.UserId]);
+        }
+
+        var result = await userManager.AddClaimAsync(user, new Claim(request.ClaimType, request.ClaimValue));
+
+        return result.Succeeded
+            ? Success<string>(_localizer["ClaimAddedSuccessfully", request.ClaimType, request.ClaimValue, user.UserName])
+            : BadRequest<string>(_localizer["ErrorAddingClaim", user.UserName]);
     }
 
-    public Task<Result<IEnumerable<string>>> GetRoleClaims(string roleName)
+    public async Task<Result<IEnumerable<string>>> GetUserClaims(string userId)
     {
-        throw new NotImplementedException();
+        var currentUser = await userManager.FindByIdAsync(userId);
+
+        if (currentUser is null)
+            return BadRequest<IEnumerable<string>>(_localizer["UnknownUser"]);
+
+        var userClaims = await userManager.GetClaimsAsync(currentUser);
+
+        return Success(userClaims.Select(c => $"{c.Type}:{c.Value}"));
     }
 
-    public Task<Result<IEnumerable<string>>> GetUserClaims(string userId)
+    public async Task<Result<IEnumerable<string>>> GetUserRoles(string userId)
     {
-        throw new NotImplementedException();
-    }
+        var currentUser = await userManager.FindByIdAsync(userId);
 
-    public Task<Result<IEnumerable<string>>> GetUserRoles(string userId)
-    {
-        throw new NotImplementedException();
+        if (currentUser is null)
+            return BadRequest<IEnumerable<string>>(_localizer["UnknownUser"]);
+
+        var userRoles = await userManager.GetRolesAsync(currentUser);
+
+        return Success(userRoles.AsEnumerable());
     }
 }

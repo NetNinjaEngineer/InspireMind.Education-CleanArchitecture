@@ -1,4 +1,5 @@
-﻿using InspireMind.Education.Api.Base;
+﻿using Asp.Versioning;
+using InspireMind.Education.Api.Base;
 using InspireMind.Education.Application.Attributes;
 using InspireMind.Education.Application.Features.Courses.DTOs;
 using InspireMind.Education.Application.Features.Courses.Requests.Commands;
@@ -18,8 +19,9 @@ namespace InspireMind.Education.Api.Controllers
     /// <remarks>
     /// This controller provides endpoints for creating, updating, deleting, and retrieving course data.
     /// </remarks>
+    [ApiVersion("1.0")]
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/courses")]
     [ApiController]
     public class CoursesController : AppControllerBase
     {
@@ -38,7 +40,7 @@ namespace InspireMind.Education.Api.Controllers
         /// <returns>A paginated list of courses with their topics.</returns>
         /// <response code="200">Returns a paginated list of courses with topics.</response>
         [HttpGet]
-        [Route("CoursesWithTopics")]
+        [Route("coursesWithTopics")]
         [ProducesResponseType(typeof(Pagination<CourseDto>), StatusCodes.Status200OK)]
         [DistributedCached(300)]
         public async Task<ActionResult<IReadOnlyList<CourseDto>>> GetCoursesWithTopics([FromQuery] CourseRequestParameters parameters)

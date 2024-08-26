@@ -1,4 +1,5 @@
-﻿using InspireMind.Education.Api.Base;
+﻿using Asp.Versioning;
+using InspireMind.Education.Api.Base;
 using InspireMind.Education.Application.Abstractions;
 using InspireMind.Education.Application.Features.Topics.DTOs;
 using InspireMind.Education.Application.Features.Topics.Requests.Commands;
@@ -18,8 +19,9 @@ namespace InspireMind.Education.Api.Controllers
     /// <remarks>
     /// This controller handles creating, updating, deleting, and retrieving topic information.
     /// </remarks>
+    [ApiVersion("1.0")]
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/topics")]
     [ApiController]
     public class TopicsController : AppControllerBase
     {

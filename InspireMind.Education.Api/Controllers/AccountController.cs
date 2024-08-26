@@ -1,4 +1,5 @@
-﻿using InspireMind.Education.Api.Base;
+﻿using Asp.Versioning;
+using InspireMind.Education.Api.Base;
 using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.Features.Auth.Handlers.Result;
 using InspireMind.Education.Application.Features.Auth.Requests.Commands;
@@ -11,8 +12,8 @@ namespace InspireMind.Education.Api.Controllers
     /// <summary>
     /// Manages operations related to authentication, including registration, login, password management, and email confirmation.
     /// </summary>
-    /// <param name="mediator">The mediator service instance used for handling commands and queries.</param>
-    [Route("api/account")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/account")]
     [ApiController]
     public class AccountController : AppControllerBase
     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace InspireMind.Education.Api.Extensions.Swagger
 {
@@ -35,6 +36,8 @@ namespace InspireMind.Education.Api.Extensions.Swagger
                     }
                 });
                 options.OperationFilter<SwaggerLanguageParameterFilter>();
+                var xmlCommentsPath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+                options.IncludeXmlComments(xmlCommentsPath);
             });
 
             return services;

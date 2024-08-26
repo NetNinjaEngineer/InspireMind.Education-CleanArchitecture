@@ -1,0 +1,317 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>InspireMind.Education.Api</name>
+    </assembly>
+    <members>
+        <member name="T:InspireMind.Education.Api.Controllers.AccountController">
+            <summary>
+            Manages operations related to authentication, including registration, login, password management, and email confirmation.
+            </summary>
+            <param name="mediator">The mediator service instance used for handling commands and queries.</param>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.AccountController.#ctor(MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:InspireMind.Education.Api.Controllers.AccountController"/> class.
+            </summary>
+            <param name="mediator">The mediator service instance used for handling commands and queries.</param>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.AccountController.Register(InspireMind.Education.Application.Models.Identity.RegisterModel)">
+            <summary>
+            Registers a new user by providing their credentials.
+            </summary>
+            <param name="request">The registration request containing the user's details.</param>
+            <returns>The registration result, including user details or error messages.</returns>
+            <response code="200">Returns the registration details if successful.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.AccountController.Login(InspireMind.Education.Application.Models.Identity.LoginModel)">
+            <summary>
+            Authenticates an existing user by providing their credentials.
+            </summary>
+            <param name="request">The login request containing the user's credentials.</param>
+            <returns>The login result, including authentication tokens or error messages.</returns>
+            <response code="200">Returns the login details if authentication is successful.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.AccountController.ForgetPassword(InspireMind.Education.Application.Models.Identity.ForgetPasswordModel)">
+            <summary>
+            Initiates a password reset request by providing the user's email address.
+            </summary>
+            <param name="request">The forget password request containing the user's email address.</param>
+            <returns>The result of the password reset request, including any relevant messages.</returns>
+            <response code="200">Returns a result indicating whether the password reset request was processed.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.AccountController.ResetPassword(System.String,System.String,InspireMind.Education.Application.Models.Identity.ResetPasswordModel)">
+            <summary>
+            Resets the user's password by providing their email, reset token, and new password.
+            </summary>
+            <param name="email">The email address of the user requesting the password reset.</param>
+            <param name="token">The reset token received by the user.</param>
+            <param name="request">The reset password request containing the new password.</param>
+            <returns>The result of the password reset operation.</returns>
+            <response code="200">Returns a result indicating whether the password was successfully reset.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.AccountController.RequestConfirmEmail(InspireMind.Education.Application.Models.Identity.RequestConfirmEmailModel)">
+            <summary>
+            Requests to confirm a user's email address by sending a confirmation message to the user's email.
+            </summary>
+            <param name="request">The request containing the email address to be confirmed.</param>
+            <returns>The result of the email confirmation request.</returns>
+            <response code="200">Returns a result indicating whether the email confirmation request was successful.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.AccountController.ConfirmEmail(System.String,System.String)">
+            <summary>
+            Confirms the user's email address by providing the email and confirmation token.
+            </summary>
+            <param name="email">The email address of the user to be confirmed.</param>
+            <param name="token">The confirmation token received by the user.</param>
+            <returns>The result of the email confirmation operation.</returns>
+            <response code="200">Returns a result indicating whether the email was successfully confirmed.</response>
+        </member>
+        <member name="T:InspireMind.Education.Api.Controllers.CoursesController">
+            <summary>
+            Manages operations related to courses.
+            </summary>
+            <remarks>
+            This controller provides endpoints for creating, updating, deleting, and retrieving course data.
+            </remarks>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.CoursesController.#ctor(MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:InspireMind.Education.Api.Controllers.CoursesController"/> class.
+            </summary>
+            <param name="mediator">The mediator instance used for sending commands and queries.</param>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.CoursesController.GetCoursesWithTopics(InspireMind.Education.Application.RequestParams.CourseRequestParameters)">
+            <summary>
+            Retrieves a list of courses along with their topics, with pagination.
+            </summary>
+            <param name="parameters">The parameters for filtering and pagination.</param>
+            <returns>A paginated list of courses with their topics.</returns>
+            <response code="200">Returns a paginated list of courses with topics.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.CoursesController.CreateNewCourse(InspireMind.Education.Application.Features.Courses.DTOs.CourseForCreateDto)">
+            <summary>
+            Creates a new course.
+            </summary>
+            <param name="model">The model containing course details to be created.</param>
+            <returns>The details of the created course.</returns>
+            <response code="201">Returns the created course.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.CoursesController.UpdateTopic(System.Guid,InspireMind.Education.Application.Features.Courses.DTOs.CourseForUpdateDto)">
+            <summary>
+            Updates an existing course.
+            </summary>
+            <param name="id">The unique identifier of the course to be updated.</param>
+            <param name="updateModel">The model containing updated course information.</param>
+            <returns>No content if the update was successful.</returns>
+            <response code="204">Indicates that the course was successfully updated.</response>
+            <response code="404">If the course to be updated is not found.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.CoursesController.DeleteCourse(System.Guid)">
+            <summary>
+            Deletes a course by ID.
+            </summary>
+            <param name="id">The unique identifier of the course to be deleted.</param>
+            <returns>No content if the delete was successful.</returns>
+            <response code="204">Indicates that the course was successfully deleted.</response>
+            <response code="404">If the course to be deleted is not found.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.CoursesController.GetAllCoursesWithoutPagination">
+            <summary>
+            Retrieves a list of all courses without pagination.
+            </summary>
+            <returns>A list of all courses.</returns>
+        </member>
+        <member name="T:InspireMind.Education.Api.Controllers.EmailController">
+            <summary>
+            Manages the process of sending emails.
+            </summary>
+            <remarks>
+            This controller provides an endpoint for sending emails by providing the necessary email parameters.
+            </remarks>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.EmailController.#ctor(MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:InspireMind.Education.Api.Controllers.EmailController"/> class.
+            </summary>
+            <param name="mediator">The mediator instance used for sending commands and queries.</param>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.EmailController.SendEmail(InspireMind.Education.Application.Models.Identity.Email)">
+            <summary>
+            Sends an email based on the provided email parameters.
+            </summary>
+            <param name="email">The email request body containing the recipient's email address, subject, and body of the email.</param>
+            <returns>A boolean value indicating whether the email was successfully sent or not.</returns>
+            <response code="200">Returns a result indicating if the email was successfully sent.</response>
+        </member>
+        <member name="T:InspireMind.Education.Api.Controllers.RolesController">
+            <summary>
+            Manages operations related to user roles, including creating, assigning, updating, and removing roles.
+            </summary>
+            <param name="mediator">The mediator service instance used for handling commands and queries.</param>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.RolesController.#ctor(MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:InspireMind.Education.Api.Controllers.RolesController"/> class.
+            </summary>
+            <param name="mediator">The mediator service instance used for handling commands and queries.</param>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.RolesController.CreateRole(System.String)">
+            <summary>
+            Creates a new role with the specified name.
+            </summary>
+            <param name="roleName">The name of the role to create.</param>
+            <returns>A response indicating the success or failure of the role creation.</returns>
+            <response code="200">Returns a confirmation message indicating the role has been successfully created.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.RolesController.AssignRole(System.String,System.String)">
+            <summary>
+            Assigns a specified role to a user.
+            </summary>
+            <param name="userId">The ID of the user to whom the role will be assigned.</param>
+            <param name="roleName">The name of the role to assign to the user.</param>
+            <returns>A response indicating the success or failure of the role assignment.</returns>
+            <response code="200">Returns a confirmation message indicating the role has been successfully assigned to the user.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.RolesController.UpdateRole(System.String,System.String)">
+            <summary>
+            Updates an existing role with a new name.
+            </summary>
+            <param name="id">The ID of the role to update.</param>
+            <param name="roleName">The new name for the role.</param>
+            <returns>A response indicating the success or failure of the role update.</returns>
+            <response code="200">Returns a confirmation message indicating the role has been successfully updated.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.RolesController.RemoveRole(System.String)">
+            <summary>
+            Removes an existing role by its ID.
+            </summary>
+            <param name="id">The ID of the role to remove.</param>
+            <returns>A response indicating the success or failure of the role removal.</returns>
+            <response code="200">Returns a confirmation message indicating the role has been successfully removed.</response>
+        </member>
+        <member name="T:InspireMind.Education.Api.Controllers.TopicsController">
+            <summary>
+            Manages operations related to topics.
+            </summary>
+            <remarks>
+            This controller handles creating, updating, deleting, and retrieving topic information.
+            </remarks>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.TopicsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:InspireMind.Education.Api.Controllers.TopicsController"/> class.
+            </summary>
+            <param name="mediator">The mediator instance used for sending commands and queries.</param>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.TopicsController.GetAllTopics">
+            <summary>
+            Retrieves a list of all topics.
+            </summary>
+            <returns>A list of all topics.</returns>
+            <response code="200">Returns a list of topics.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.TopicsController.GetTopic(System.Guid)">
+            <summary>
+            Retrieves a topic by its unique identifier.
+            </summary>
+            <param name="id">The unique identifier of the topic.</param>
+            <returns>The details of the specified topic.</returns>
+            <response code="200">Returns the details of the topic.</response>
+            <response code="404">If the topic is not found.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.TopicsController.CreateNewTopic(InspireMind.Education.Application.Features.Topics.DTOs.TopicForCreationDto)">
+            <summary>
+            Creates a new topic.
+            </summary>
+            <param name="model">The model containing the details of the topic to be created.</param>
+            <returns>The details of the created topic.</returns>
+            <response code="201">Returns the created topic.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.TopicsController.GetPaginatedTopics(InspireMind.Education.Application.RequestParams.TopicRequestParams)">
+            <summary>
+            Retrieves a paginated list of topics.
+            </summary>
+            <param name="topicRequestParams">Parameters for filtering and pagination.</param>
+            <returns>A paginated list of topics.</returns>
+            <response code="200">Returns a paginated list of topics.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.TopicsController.TopicWithRelatedCourses(System.Guid)">
+            <summary>
+            Retrieves a topic along with related courses by its unique identifier.
+            </summary>
+            <param name="topicId">The unique identifier of the topic.</param>
+            <returns>The topic along with related courses.</returns>
+            <response code="200">Returns the topic along with related courses.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.TopicsController.UpdateTopic(System.Guid,InspireMind.Education.Application.Features.Topics.DTOs.TopicForUpdateDto)">
+            <summary>
+            Updates an existing topic.
+            </summary>
+            <param name="id">The unique identifier of the topic to be updated.</param>
+            <param name="updateModel">The model containing updated topic information.</param>
+            <returns>No content if the update was successful.</returns>
+            <response code="204">Indicates that the topic was successfully updated.</response>
+            <response code="404">If the topic to be updated is not found.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.TopicsController.DeleteTopic(System.Guid)">
+            <summary>
+            Deletes a topic by its unique identifier.
+            </summary>
+            <param name="id">The unique identifier of the topic to be deleted.</param>
+            <returns>No content if the delete was successful.</returns>
+            <response code="204">Indicates that the topic was successfully deleted.</response>
+            <response code="404">If the topic to be deleted is not found.</response>
+        </member>
+        <member name="T:InspireMind.Education.Api.Controllers.UsersController">
+            <summary>
+            Manages user-related operations.
+            </summary>
+            <remarks>
+            This controller handles CRUD operations for users, including retrieving, updating, and deleting user data.
+            </remarks>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.UsersController.#ctor(MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:InspireMind.Education.Api.Controllers.UsersController"/> class.
+            </summary>
+            <param name="mediator">The mediator instance used for sending commands and queries.</param>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.UsersController.GetPaginatedUsers(InspireMind.Education.Application.RequestParams.UserRequestParameters)">
+            <summary>
+            Retrieves a paginated list of users.
+            </summary>
+            <param name="userParams">Parameters to filter and paginate the user list.</param>
+            <returns>A paginated response containing a list of users.</returns>
+            <response code="200">Returns a paginated list of users.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.UsersController.GetSingleUser(System.Guid)">
+            <summary>
+            Retrieves a single user by ID.
+            </summary>
+            <param name="userId">The unique identifier of the user.</param>
+            <returns>The details of the specified user.</returns>
+            <response code="200">Returns the details of the user.</response>
+            <response code="404">If the user is not found.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.UsersController.UpdateUser(System.Guid,InspireMind.Education.Application.Features.Users.DTOs.UserForUpdateDto)">
+            <summary>
+            Updates the details of an existing user.
+            </summary>
+            <param name="userId">The unique identifier of the user.</param>
+            <param name="updateModel">The model containing updated user information.</param>
+            <returns>A result indicating the success or failure of the update operation.</returns>
+            <response code="200">Returns a result indicating the update status.</response>
+            <response code="404">If the user to be updated is not found.</response>
+        </member>
+        <member name="M:InspireMind.Education.Api.Controllers.UsersController.DeleteUser(System.Guid)">
+            <summary>
+            Deletes a user by ID.
+            </summary>
+            <param name="userId">The unique identifier of the user to be deleted.</param>
+            <returns>A result indicating the success or failure of the delete operation.</returns>
+            <response code="200">Returns a result indicating the delete status.</response>
+            <response code="404">If the user to be deleted is not found.</response>
+        </member>
+    </members>
+</doc>

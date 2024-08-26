@@ -2,7 +2,7 @@
 using FluentValidation;
 using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.Contracts.Identity;
-using InspireMind.Education.Application.DTOs.User;
+using InspireMind.Education.Application.Features.Users.DTOs;
 using InspireMind.Education.Application.RequestParams;
 using InspireMind.Education.Application.Wrappers;
 using InspireMind.Education.Identity.Entities;

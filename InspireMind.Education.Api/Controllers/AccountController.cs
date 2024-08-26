@@ -1,6 +1,7 @@
 ﻿using InspireMind.Education.Api.Base;
-using InspireMind.Education.Application.Features.Authentication.Handlers.Result;
-using InspireMind.Education.Application.Features.Authentication.Requests.Commands;
+using InspireMind.Education.Application.Bases;
+using InspireMind.Education.Application.Features.Auth.Handlers.Result;
+using InspireMind.Education.Application.Features.Auth.Requests.Commands;
 using InspireMind.Education.Application.Models.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -8,11 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace InspireMind.Education.Api.Controllers;
 [Route("api/account")]
 [ApiController]
-public class AccountController : AppControllerBase
+public class AccountController(IMediator mediator) : AppControllerBase(mediator)
 {
-    public AccountController(IMediator mediator) : base(mediator) { }
-
-
     [HttpPost("register")]
     public async Task<ActionResult<RegisterResult>> Register(RegisterModel request)
     {
@@ -33,19 +31,13 @@ public class AccountController : AppControllerBase
     }
 
     [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPassword(
+    public async Task<ActionResult<Result<string>>> ResetPassword(
         [FromQuery] string email,
         [FromQuery] string token,
         [FromBody] ResetPasswordModel request)
     {
-        var result = await _mediator.Send(new ResetPasswordCommand
-        {
-            Email = email,
-            Token = token,
-            ResetRequest = request
-        });
-
-        return Ok(result);
+        var command = new ResetPasswordCommand { Email = email, Token = token, ResetRequest = request };
+        return CustomResult(await _mediator.Send(command));
     }
 
     [HttpPost("request-confirm-email")]

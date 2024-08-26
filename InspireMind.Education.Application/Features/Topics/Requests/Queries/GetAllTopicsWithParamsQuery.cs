@@ -1,5 +1,5 @@
 ﻿using InspireMind.Education.Application.Abstractions;
-using InspireMind.Education.Application.DTOs.Topic;
+using InspireMind.Education.Application.Features.Topics.DTOs;
 using InspireMind.Education.Application.RequestParams;
 using InspireMind.Education.Application.Wrappers;
 using MediatR;

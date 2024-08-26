@@ -1,6 +1,6 @@
 ﻿using InspireMind.Education.Application.Contracts.Persistence;
-using InspireMind.Education.Application.DTOs.Course;
-using InspireMind.Education.Application.DTOs.Topic;
+using InspireMind.Education.Application.Features.Courses.DTOs;
+using InspireMind.Education.Application.Features.Topics.DTOs;
 using InspireMind.Education.Application.Specifications;
 using InspireMind.Education.Domain.Entities;
 using Microsoft.EntityFrameworkCore;

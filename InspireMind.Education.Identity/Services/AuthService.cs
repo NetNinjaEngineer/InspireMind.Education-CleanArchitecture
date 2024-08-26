@@ -1,7 +1,6 @@
-﻿using FluentValidation;
-using InspireMind.Education.Application.Bases;
+﻿using InspireMind.Education.Application.Bases;
 using InspireMind.Education.Application.Contracts.Identity;
-using InspireMind.Education.Application.Features.Authentication.Handlers.Result;
+using InspireMind.Education.Application.Features.Auth.Handlers.Result;
 using InspireMind.Education.Application.Models.Identity;
 using InspireMind.Education.Identity.Entities;
 using InspireMind.Education.Identity.Helpers;
@@ -24,8 +23,6 @@ public class AuthService : BaseResponseHandler, IAuthService
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
     private readonly IEmailsService _emailsService;
     private readonly ILogger<AuthService> _logger;
-    private readonly IValidator<RegisterModel> _registerValidator;
-    private readonly IValidator<ResetPasswordModel> _resetPasswordValidator;
 
     public AuthService(
         IStringLocalizer<BaseResponseHandler> localizer,
@@ -33,9 +30,7 @@ public class AuthService : BaseResponseHandler, IAuthService
         SignInManager<AppUser> signInManager,
         IOptions<JwtSettings> jwtSettings,
         IEmailsService emailsService,
-        ILogger<AuthService> logger,
-        IValidator<RegisterModel> registerValidator,
-        IValidator<ResetPasswordModel> resetPasswordValidator) : base(localizer)
+        ILogger<AuthService> logger) : base(localizer)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -43,8 +38,6 @@ public class AuthService : BaseResponseHandler, IAuthService
         _jwtSecurityTokenHandler = new();
         _emailsService = emailsService;
         _logger = logger;
-        _registerValidator = registerValidator;
-        _resetPasswordValidator = resetPasswordValidator;
     }
 
     public async Task<Result<LoginResult>> Login(LoginModel request)
@@ -115,13 +108,6 @@ public class AuthService : BaseResponseHandler, IAuthService
 
     public async Task<Result<RegisterResult>> Register(RegisterModel request)
     {
-        var validator = _registerValidator.Validate(request);
-        if (!validator.IsValid)
-        {
-            var error = validator.Errors.Select(e => e.ErrorMessage).FirstOrDefault();
-            return UnprocessableEntity<RegisterResult>(error!);
-        }
-
         var user = await _userManager.FindByNameAsync(request.UserName);
         if (user is not null)
         {
@@ -141,13 +127,14 @@ public class AuthService : BaseResponseHandler, IAuthService
             };
 
             var identityResult = await _userManager.CreateAsync(appUser, request.Password!);
-            await _userManager.AddToRoleAsync(appUser, Roles.User);
 
             if (!identityResult.Succeeded)
             {
                 var errors = identityResult.Errors.Select(e => e.Description).ToList();
                 return BadRequest<RegisterResult>(_localizer["validationErrors"], errors: errors);
             }
+
+            await _userManager.AddToRoleAsync(appUser, Roles.User);
 
             _logger.LogInformation($"Register successfull.");
             return Created(new RegisterResult(true));
@@ -233,11 +220,6 @@ public class AuthService : BaseResponseHandler, IAuthService
 
     public async Task<Result<string>> ResetPassword(string email, string token, ResetPasswordModel resetModel)
     {
-        // password validation
-        var validationResult = _resetPasswordValidator.Validate(resetModel);
-        if (!validationResult.IsValid)
-            throw new ValidationException(validationResult.Errors);
-
         var user = await _userManager.FindByEmailAsync(email);
 
         if (user is null)

@@ -1,5 +1,5 @@
 ﻿using InspireMind.Education.Application.Bases;
-using InspireMind.Education.Application.DTOs.User;
+using InspireMind.Education.Application.Features.Users.DTOs;
 using MediatR;
 
 namespace InspireMind.Education.Application.Features.Users.Requests.Queries;

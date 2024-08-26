@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using InspireMind.Education.Application.DTOs.Topic;
+using InspireMind.Education.Application.Features.Topics.DTOs;
 using InspireMind.Education.Application.Wrappers;
 using Microsoft.Extensions.Localization;
 

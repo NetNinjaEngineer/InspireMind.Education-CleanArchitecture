@@ -1,5 +1,5 @@
 ﻿using InspireMind.Education.Application.Bases;
-using InspireMind.Education.Application.Features.Authentication.Handlers.Result;
+using InspireMind.Education.Application.Features.Auth.Handlers.Result;
 using InspireMind.Education.Application.Models.Identity;
 
 namespace InspireMind.Education.Application.Contracts.Identity;

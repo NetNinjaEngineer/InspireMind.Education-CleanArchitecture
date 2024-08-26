@@ -2,8 +2,8 @@
 using FluentValidation;
 using InspireMind.Education.Application.Abstractions;
 using InspireMind.Education.Application.Contracts.Persistence;
-using InspireMind.Education.Application.DTOs.Course;
 using InspireMind.Education.Application.Exceptions;
+using InspireMind.Education.Application.Features.Courses.DTOs;
 using InspireMind.Education.Application.Features.Courses.Requests.Commands;
 using InspireMind.Education.Application.Wrappers;
 using InspireMind.Education.Domain.Entities;

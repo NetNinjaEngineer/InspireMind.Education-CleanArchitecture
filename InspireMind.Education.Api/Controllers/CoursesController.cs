@@ -1,6 +1,6 @@
 ﻿using InspireMind.Education.Api.Base;
 using InspireMind.Education.Application.Attributes;
-using InspireMind.Education.Application.DTOs.Course;
+using InspireMind.Education.Application.Features.Courses.DTOs;
 using InspireMind.Education.Application.Features.Courses.Requests.Commands;
 using InspireMind.Education.Application.Features.Courses.Requests.Queries;
 using InspireMind.Education.Application.RequestParams;

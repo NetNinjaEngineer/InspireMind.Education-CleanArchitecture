@@ -1,5 +1,8 @@
+using InspireMind.Education.Api;
+using InspireMind.Education.Api.Extensions.Localization;
+using InspireMind.Education.Api.Extensions.Swagger;
+using InspireMind.Education.Api.Middleware;
 using InspireMind.Education.Application;
-using InspireMind.Education.Application.Middleware;
 using InspireMind.Education.Identity;
 using InspireMind.Education.Identity.Entities;
 using InspireMind.Education.Infrastructure;
@@ -8,7 +11,6 @@ using InspireMind.Education.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Text.Json.Serialization;
 
@@ -32,47 +34,27 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerDocumentation();
 builder.Services.AddLocalization();
 builder.Services
     .AddApplicationDependencies(builder.Configuration)
     .AddInfrastructureDependencies(builder.Configuration)
     .AddPersistenceDependencies(builder.Configuration)
     .AddIdentityDependencies(builder.Configuration)
-    .AddServiceDependencies();
-
-builder.Services.AddCors(options =>
-{
-    var clientUrl = builder.Configuration.GetSection("ClientUrl").Value!;
-
-    options.AddPolicy("CorsPolicy", options =>
-        options.AllowAnyHeader()
-            .AllowAnyMethod()
-            .WithOrigins(clientUrl));
-});
+    .AddServiceDependencies()
+    .AddApiDependencies(builder.Configuration);
 
 var app = builder.Build();
-
-using var scope = app.Services.CreateScope();
-var database = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-await database.Database.MigrateAsync();
+app.UseMiddleware<MigrateDatabaseMiddleware>();
 
 if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    app.UseSwaggerDocumentation();
 
 app.UseStaticFiles();
 
 app.UseMiddleware<GlobalErrorHandlingMiddleware>();
 
-var supportedCultures = new[] { "en-US", "ar-EG", "en" };
-var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[0])
-    .AddSupportedCultures(supportedCultures);
-
-app.UseRequestLocalization(localizationOptions);
+app.UseLocalization();
 
 app.UseCors("CorsPolicy");
 

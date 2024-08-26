@@ -1,15 +1,17 @@
 ﻿using InspireMind.Education.Api.Base;
 using InspireMind.Education.Application.Bases;
-using InspireMind.Education.Application.DTOs.User;
+using InspireMind.Education.Application.Features.Users.DTOs;
 using InspireMind.Education.Application.Features.Users.Requests.Commands;
 using InspireMind.Education.Application.Features.Users.Requests.Queries;
 using InspireMind.Education.Application.RequestParams;
 using InspireMind.Education.Application.Wrappers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InspireMind.Education.Api.Controllers
 {
+    [Authorize]
     [Route("api/users")]
     [ApiController]
     public class UsersController(IMediator mediator) : AppControllerBase(mediator)

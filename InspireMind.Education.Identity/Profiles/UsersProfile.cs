@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using InspireMind.Education.Application.DTOs.User;
+using InspireMind.Education.Application.Features.Users.DTOs;
 using InspireMind.Education.Identity.Entities;
 
 namespace InspireMind.Education.Identity.Profiles;

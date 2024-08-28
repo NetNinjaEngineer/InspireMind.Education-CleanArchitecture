@@ -9,7 +9,7 @@ public class UsersCommandHandler(IUser user) : IRequestHandler<UpdateUserCommand
 {
     public async Task<Result<string>> Handle(UpdateUserCommand request,
                                        CancellationToken cancellationToken)
-        => await user.UpdateUserAsync(request.UserId, request.UpdateModel);
+        => await user.UpdateUserAsync(request.UserId, request.User);
 
     public async Task<Result<string>> Handle(DeleteUserCommand request,
                                              CancellationToken cancellationToken)

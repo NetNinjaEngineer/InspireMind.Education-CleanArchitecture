@@ -121,7 +121,7 @@ namespace InspireMind.Education.Api.Controllers
         /// <param name="claimValue">The value of the claim to be assigned.</param>
         /// <returns>A result containing the status of the operation.</returns>
         /// <response code="200">Returns the status of the claim assignment operation.</response>
-        [HttpGet]
+        [HttpPost]
         [Route("users/{userId:guid}/assign-claim")]
         [ProducesResponseType(typeof(Result<string>), StatusCodes.Status200OK)]
         public async Task<ActionResult<Result<IEnumerable<string>>>> AssignClaim(

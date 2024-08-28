@@ -1,13 +1,7 @@
 ﻿namespace InspireMind.Education.MVC.Models;
 
-public class LoginResultVM
+public class LoginResultVM(bool isSuccessfull, bool isEmailConfirmed)
 {
-    public LoginResultVM(bool isSuccessfull, bool isEmailConfirmed)
-    {
-        IsSuccessfull = isSuccessfull;
-        IsEmailConfirmed = isEmailConfirmed;
-    }
-
-    public bool IsSuccessfull { get; set; }
-    public bool IsEmailConfirmed { get; set; }
+    public bool IsSuccessfull { get; set; } = isSuccessfull;
+    public bool IsEmailConfirmed { get; set; } = isEmailConfirmed;
 }

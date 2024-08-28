@@ -1,11 +1,11 @@
 {
-  "maximumLength50": "{0} must be no more than 50 characters long.",
+  "maximumLength50": "{PropertyName} must be no more than 50 characters long.",
   "resourceNotFound": "Resource not found.",
   "topicNotFoundMessage": "The topic with id: '{0}' was not found.",
   "courseNotFoundMessage": "The course with id: '{0}' was not found.",
   "validationErrors": "Validation errors occured !!!",
-  "notEmpty": "{0} cannot be empty.",
-  "notNull": "{0} is required.",
+  "notEmpty": "{PropertyName} cannot be empty.",
+  "notNull": "{PropertyName} is required.",
   "courseDurationGreaterThanZero": "Duration must be greater than zero",
   "courseDurationRequired": "Duration is required",
   "UnknownUser": "Unknown user.",
@@ -22,8 +22,10 @@
   "EmailTaken": "Email is already taken !",
   "Successfully": "Operation done successfully.",
   "UpdateFailed": "There is a problems when updating the data.",
-  "maxLength": "{0} must be at most 100 characters long.",
-  "minLength": "The {0} must be at least {1} characters long.",
+  "maxLength": "{PropertyName} must be at most {1} characters long.",
+  "minLength": "The {PropertyName} must be at least {1} characters long.",
   "matched": "The {0} and {1} do not match.",
-  "DeleteFailed": "There is some problems when deleting process."
+  "DeleteFailed": "There is some problems when deleting process.",
+  "ServerError": "An unexpected error occurred. Please try again later."
+
 }

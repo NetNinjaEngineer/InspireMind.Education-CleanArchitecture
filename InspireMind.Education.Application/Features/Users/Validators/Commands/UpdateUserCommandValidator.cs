@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using InspireMind.Education.Application.Features.Users.DTOs;
+using InspireMind.Education.Application.Features.Users.Requests.Commands;
 using Microsoft.Extensions.Localization;
 
 namespace InspireMind.Education.Application.Features.Users.Validators.Commands;
-public class UpdateUserCommandValidator : AbstractValidator<UserForUpdateDto>
+public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 {
     private readonly IStringLocalizer<UpdateUserCommandValidator> _localizer;
 
@@ -11,23 +11,23 @@ public class UpdateUserCommandValidator : AbstractValidator<UserForUpdateDto>
     {
         _localizer = localizer;
 
-        RuleFor(x => x.FirstName)
-          .NotNull().WithMessage(string.Format(_localizer["notNull"], "First name"))
-          .NotEmpty().WithMessage(string.Format(_localizer["notEmpty"], "First name"))
-          .MaximumLength(50).WithMessage(string.Format(_localizer["maxLength"], "First name", 50));
+        RuleFor(x => x.User.FirstName)
+          .NotNull().WithMessage(_localizer["notNull"])
+          .NotEmpty().WithMessage(_localizer["notEmpty"])
+          .MaximumLength(50).WithMessage(_localizer["maxLength", 50]);
 
 
-        RuleFor(x => x.LastName)
-            .NotNull().WithMessage(string.Format(_localizer["notNull"], "Last name"))
-            .NotEmpty().WithMessage(string.Format(_localizer["notEmpty"], "Last name"))
-            .MaximumLength(50).WithMessage(string.Format(_localizer["maxLength"], "Last name", 50));
+        RuleFor(x => x.User.LastName)
+            .NotNull().WithMessage(_localizer["notNull"])
+            .NotEmpty().WithMessage(_localizer["notEmpty"])
+            .MaximumLength(50).WithMessage(_localizer["maxLength", 50]);
 
-        RuleFor(x => x.UserName)
-            .NotNull().WithMessage(string.Format(_localizer["notNull"], "Username"))
-            .NotEmpty().WithMessage(string.Format(_localizer["notEmpty"], "Username"));
+        RuleFor(x => x.User.UserName)
+            .NotNull().WithMessage(_localizer["notNull"])
+            .NotEmpty().WithMessage(_localizer["notEmpty"]);
 
-        RuleFor(x => x.Email)
-            .NotNull().WithMessage(string.Format(_localizer["notNull"], "Email"))
-            .NotEmpty().WithMessage(string.Format(_localizer["notEmpty"], "Email"));
+        RuleFor(x => x.User.Email)
+            .NotNull().WithMessage(_localizer["notNull"])
+            .NotEmpty().WithMessage(_localizer["notEmpty"]);
     }
 }

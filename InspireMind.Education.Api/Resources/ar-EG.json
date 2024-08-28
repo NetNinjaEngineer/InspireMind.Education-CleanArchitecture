@@ -1,11 +1,11 @@
 ﻿{
-  "maximumLength50": "يجب أن يكون {0} بطول لا يتجاوز 50 حرفًا.",
+  "maximumLength50": "يجب أن يكون {PropertyName} بطول لا يتجاوز 50 حرفًا.",
   "resourceNotFound": "المورد غير موجود.",
   "topicNotFoundMessage": "الموضوع الذي يحمل المعرف: '{0}' لم يُعثر عليه.",
   "courseNotFoundMessage": "الدورة التدريبية التي تحمل المعرف: '{0}' لم تُعثر عليها.",
   "validationErrors": "حدثت أخطاء في التحقق !!!",
-  "notEmpty": "لا يمكن أن يكون {0} فارغًا.",
-  "notNull": "يعد {0} مطلوبًا.",
+  "notEmpty": "لا يمكن أن يكون {PropertyName} فارغًا.",
+  "notNull": "يعد {PropertyName} مطلوبًا.",
   "courseDurationGreaterThanZero": "يجب أن تكون المدة أكبر من الصفر",
   "courseDurationRequired": "مدة الدورة مطلوبة",
   "UnknownUser": "مستخدم غير معروف.",
@@ -22,8 +22,10 @@
   "EmailTaken": "البريد الإلكتروني مأخوذ بالفعل!",
   "Successfully": "تمت العملية بنجاح.",
   "UpdateFailed": "حدثت مشكلة عند تحديث البيانات.",
-  "maxLength": "يجب أن يكون {0} بطول لا يتجاوز {1} حرفًا.",
-  "minLength": "يجب أن يكون {0} بطول لا يقل عن {1} حرفًا.",
+  "maxLength": "يجب أن يكون {PropertyName} بطول لا يتجاوز {1} حرفًا.",
+  "minLength": "يجب أن يكون {PropertyName} بطول لا يقل عن {1} حرفًا.",
   "matched": "الـ {0} و {1} لا يتطابقان.",
-  "DeleteFailed": "حدثت مشكلة أثناء عملية الحذف."
+  "DeleteFailed": "حدثت مشكلة أثناء عملية الحذف.",
+  "ServerError": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقًا."
+
 }

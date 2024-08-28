@@ -15,45 +15,32 @@ using System.Security.Claims;
 using System.Text;
 
 namespace InspireMind.Education.Identity.Services;
-public class AuthService : BaseResponseHandler, IAuthService
+public class AuthService(
+    IStringLocalizer<BaseResponseHandler> localizer,
+    UserManager<AppUser> userManager,
+    SignInManager<AppUser> signInManager,
+    IOptions<JwtSettings> jwtSettings,
+    IEmailsService emailsService,
+    ILogger<AuthService> logger)
+    : BaseResponseHandler(localizer), IAuthService
 {
-    private readonly UserManager<AppUser> _userManager;
-    private readonly SignInManager<AppUser> _signInManager;
-    private readonly JwtSettings _jwtSettings;
-    private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
-    private readonly IEmailsService _emailsService;
-    private readonly ILogger<AuthService> _logger;
-
-    public AuthService(
-        IStringLocalizer<BaseResponseHandler> localizer,
-        UserManager<AppUser> userManager,
-        SignInManager<AppUser> signInManager,
-        IOptions<JwtSettings> jwtSettings,
-        IEmailsService emailsService,
-        ILogger<AuthService> logger) : base(localizer)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _jwtSettings = jwtSettings.Value;
-        _jwtSecurityTokenHandler = new();
-        _emailsService = emailsService;
-        _logger = logger;
-    }
+    private readonly JwtSettings _jwtSettings = jwtSettings.Value;
+    private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
 
     public async Task<Result<LoginResult>> Login(LoginModel request)
     {
-        var loggedInUser = await _userManager.FindByEmailAsync(request.Email);
+        var loggedInUser = await userManager.FindByEmailAsync(request.Email);
 
         if (loggedInUser is null)
             return BadRequest<LoginResult>(_localizer["UnknownUser"]);
 
-        if (!await _userManager.IsEmailConfirmedAsync(loggedInUser))
+        if (!await userManager.IsEmailConfirmedAsync(loggedInUser))
             return BadRequest<LoginResult>(_localizer["EmailNotConfirmed"]);
 
-        if (!await _userManager.CheckPasswordAsync(loggedInUser, request.Password))
+        if (!await userManager.CheckPasswordAsync(loggedInUser, request.Password))
             return BadRequest<LoginResult>(_localizer["InvalidCredientials"]);
 
-        await _signInManager.PasswordSignInAsync(
+        await signInManager.PasswordSignInAsync(
              user: loggedInUser,
              password: request.Password,
              isPersistent: true,
@@ -61,7 +48,7 @@ public class AuthService : BaseResponseHandler, IAuthService
 
         var token = await GenerateJwtToken(loggedInUser);
 
-        _logger.LogInformation($"Login successfull.");
+        logger.LogInformation($"Login successfull.");
 
         return Success(new LoginResult(
             isSucessfull: true,
@@ -74,8 +61,8 @@ public class AuthService : BaseResponseHandler, IAuthService
 
     private async Task<JwtSecurityToken> GenerateJwtToken(AppUser user)
     {
-        var userClaims = await _userManager.GetClaimsAsync(user);
-        var roles = await _userManager.GetRolesAsync(user);
+        var userClaims = await userManager.GetClaimsAsync(user);
+        var roles = await userManager.GetRolesAsync(user);
 
         var roleClaims = new List<Claim>();
 
@@ -108,53 +95,49 @@ public class AuthService : BaseResponseHandler, IAuthService
 
     public async Task<Result<RegisterResult>> Register(RegisterModel request)
     {
-        var user = await _userManager.FindByNameAsync(request.UserName);
+        var user = await userManager.FindByNameAsync(request.UserName);
         if (user is not null)
         {
             return Conflict<RegisterResult>(_localizer["UsernameExisted"]);
         }
 
-        var existingUserEmail = await _userManager.FindByEmailAsync(request.Email);
-        if (existingUserEmail is null)
+        var existingUserEmail = await userManager.FindByEmailAsync(request.Email);
+        if (existingUserEmail is not null) return Conflict<RegisterResult>(_localizer["EmailTaken"]);
+        var appUser = new AppUser
         {
-            var appUser = new AppUser
-            {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email,
-                UserName = request.UserName,
-                EmailConfirmed = false
-            };
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            Email = request.Email,
+            UserName = request.UserName,
+            EmailConfirmed = false
+        };
 
-            var identityResult = await _userManager.CreateAsync(appUser, request.Password!);
+        var identityResult = await userManager.CreateAsync(appUser, request.Password!);
 
-            if (!identityResult.Succeeded)
-            {
-                var errors = identityResult.Errors.Select(e => e.Description).ToList();
-                return BadRequest<RegisterResult>(_localizer["validationErrors"], errors: errors);
-            }
-
-            await _userManager.AddToRoleAsync(appUser, Roles.User);
-
-            _logger.LogInformation($"Register successfull.");
-            return Created(new RegisterResult(true));
+        if (!identityResult.Succeeded)
+        {
+            var errors = identityResult.Errors.Select(e => e.Description).ToList();
+            return BadRequest<RegisterResult>(_localizer["validationErrors"], errors: errors);
         }
 
-        return Conflict<RegisterResult>(_localizer["EmailTaken"]);
+        await userManager.AddToRoleAsync(appUser, Roles.User);
+
+        logger.LogInformation($"Register successfull.");
+        return Created(new RegisterResult(true));
 
     }
 
     public async Task<Result<string>> ForgetPassword(ForgetPasswordModel forgetModel)
     {
-        var user = await _userManager.FindByEmailAsync(forgetModel.Email);
+        var user = await userManager.FindByEmailAsync(forgetModel.Email);
 
-        if (user is null || !await _userManager.IsEmailConfirmedAsync(user))
+        if (user is null || !await userManager.IsEmailConfirmedAsync(user))
         {
-            _logger.LogWarning($"ForgotPassword failed: Invalid user for email {forgetModel.Email}");
+            logger.LogWarning($"ForgotPassword failed: Invalid user for email {forgetModel.Email}");
             return BadRequest<string>(_localizer["UnknownUser"]);
         }
 
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
         var encodedToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
 
         var parameters = new Dictionary<string, string>
@@ -209,31 +192,31 @@ public class AuthService : BaseResponseHandler, IAuthService
             Body = emailBody
         };
 
-        Result<bool> emailSentResult = await _emailsService.SendEmail(emailMessage);
+        var emailSentResult = await emailsService.SendEmail(emailMessage);
 
         if (emailSentResult.Succeeded)
             return Success<string>(_localizer["ResetPasswordLinkSent"]);
 
-        _logger.LogError($"Failed to send password reset email to {user.Email}");
+        logger.LogError($"Failed to send password reset email to {user.Email}");
         return BadRequest<string>(_localizer["ResetPasswordLinkFailure"]);
     }
 
     public async Task<Result<string>> ResetPassword(string email, string token, ResetPasswordModel resetModel)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await userManager.FindByEmailAsync(email);
 
         if (user is null)
         {
-            _logger.LogWarning($"ResetPassword failed: Invalid user for email {email}");
+            logger.LogWarning($"ResetPassword failed: Invalid user for email {email}");
             return BadRequest<string>(_localizer["UnknownUser"]);
         }
 
-        var result = await _userManager.ResetPasswordAsync(user, token, resetModel.Password);
+        var result = await userManager.ResetPasswordAsync(user, token, resetModel.Password);
 
         if (result.Succeeded)
         {
             // send email
-            _logger.LogInformation($"Your password has been reset for email : '{email}'");
+            logger.LogInformation($"Your password has been reset for email : '{email}'");
 
 
             var emailBody = $@"
@@ -247,12 +230,12 @@ public class AuthService : BaseResponseHandler, IAuthService
                 Body = emailBody
             };
 
-            await _emailsService.SendEmail(emailMessage);
+            await emailsService.SendEmail(emailMessage);
 
             return Success<string>(_localizer["PasswordResetSuccess"]);
         }
 
-        _logger.LogError($"Password reset failed.");
+        logger.LogError($"Password reset failed.");
 
         return BadRequest<string>(
             message: _localizer["PasswordResetFailure"],
@@ -261,15 +244,15 @@ public class AuthService : BaseResponseHandler, IAuthService
 
     public async Task<Result<string>> RequestConfirmEmail(RequestConfirmEmailModel requestConfirmModel)
     {
-        var user = await _userManager.FindByEmailAsync(requestConfirmModel.Email);
+        var user = await userManager.FindByEmailAsync(requestConfirmModel.Email);
 
         if (user is null)
         {
-            _logger.LogError($"Invalid user requested.");
+            logger.LogError($"Invalid user requested.");
             return BadRequest<string>(_localizer["UnknownUser"]);
         }
 
-        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
         var encodedToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
 
@@ -321,7 +304,7 @@ public class AuthService : BaseResponseHandler, IAuthService
             Body = emailBody
         };
 
-        var status = await _emailsService.SendEmail(emailMessage);
+        var status = await emailsService.SendEmail(emailMessage);
 
         return status.Succeeded ?
             Success<string>(_localizer["EmailConfirmationMessageSent"]) :
@@ -331,17 +314,14 @@ public class AuthService : BaseResponseHandler, IAuthService
 
     public async Task<Result<string>> ConfirmEmail(string email, string token)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await userManager.FindByEmailAsync(email);
 
-        if (user is not null)
-        {
-            var result = await _userManager.ConfirmEmailAsync(user, token);
+        if (user is null) return BadRequest<string>(_localizer["UnknownUser"]);
+        var result = await userManager.ConfirmEmailAsync(user, token);
 
-            return result.Succeeded ?
-                Success<string>(_localizer["EmailConfirmed", user.Email!]) :
-                BadRequest<string>(_localizer["EmailNotConfirmed", user.Email!]);
-        }
+        return result.Succeeded ?
+            Success<string>(_localizer["EmailConfirmed", user.Email!]) :
+            BadRequest<string>(_localizer["EmailNotConfirmed", user.Email!]);
 
-        return BadRequest<string>(_localizer["UnknownUser"]);
     }
 }

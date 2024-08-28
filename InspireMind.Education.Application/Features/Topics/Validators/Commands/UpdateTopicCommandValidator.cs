@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using InspireMind.Education.Application.Features.Topics.DTOs;
+using InspireMind.Education.Application.Features.Topics.Requests.Commands;
 using InspireMind.Education.Application.Wrappers;
 using Microsoft.Extensions.Localization;
 
 namespace InspireMind.Education.Application.Features.Topics.Validators.Commands;
-public sealed class UpdateTopicCommandValidator : AbstractValidator<TopicForUpdateDto>
+public sealed class UpdateTopicCommandValidator : AbstractValidator<UpdateTopicCommand>
 {
     private readonly IStringLocalizer<UpdateTopicCommandValidator> _localizer;
 
@@ -12,9 +12,9 @@ public sealed class UpdateTopicCommandValidator : AbstractValidator<TopicForUpda
     {
         _localizer = localizer;
 
-        RuleFor(x => x.TopicName)
-            .NotEmpty().WithMessage(string.Format(_localizer[SharedResourcesKeys.NotEmpty], "TopicName"))
-            .NotNull().WithMessage(string.Format(_localizer[SharedResourcesKeys.NotNull], "TopicName"))
-            .MaximumLength(50).WithMessage(string.Format(_localizer[SharedResourcesKeys.MaximumLength50], "TopicName"));
+        RuleFor(x => x.UpdatedTopic.TopicName)
+            .NotEmpty().WithMessage(_localizer[SharedResourcesKeys.NotEmpty])
+            .NotNull().WithMessage(_localizer[SharedResourcesKeys.NotNull])
+            .MaximumLength(50).WithMessage(_localizer[SharedResourcesKeys.MaximumLength50]);
     }
 }

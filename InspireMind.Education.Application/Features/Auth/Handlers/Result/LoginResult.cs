@@ -1,25 +1,14 @@
 ﻿namespace InspireMind.Education.Application.Features.Auth.Handlers.Result;
-public class LoginResult
+public class LoginResult(
+    bool isSucessfull,
+    string token,
+    string userId,
+    string email,
+    string username)
 {
-    public bool IsSucessfull { get; }
-    public string Token { get; }
-    public string UserId { get; }
-    public string Email { get; }
-    public string Username { get; }
-
-    public LoginResult(
-        bool isSucessfull,
-        string token,
-        string userId,
-        string email,
-        string username)
-    {
-        IsSucessfull = isSucessfull;
-        Token = token;
-        UserId = userId;
-        Email = email;
-        Username = username;
-    }
-
-
+    public bool IsSucessfull { get; } = isSucessfull;
+    public string Token { get; } = token;
+    public string UserId { get; } = userId;
+    public string Email { get; } = email;
+    public string Username { get; } = username;
 }

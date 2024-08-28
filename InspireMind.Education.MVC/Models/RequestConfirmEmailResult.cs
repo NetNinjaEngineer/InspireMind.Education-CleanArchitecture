@@ -1,17 +1,8 @@
 ﻿namespace InspireMind.Education.MVC.Models;
 
-public class RequestConfirmEmailResult
+public class RequestConfirmEmailResult(string? successMessage = null, string? errorMessage = null)
 {
-    public RequestConfirmEmailResult(string? successMessage = null, string? errorMessage = null)
-    {
-        IsSuccess = !string.IsNullOrEmpty(successMessage);
-        SuccessMessage = successMessage;
-        ErrorMessage = errorMessage;
-    }
-
-
-    public bool IsSuccess { get; }
-    public string? SuccessMessage { get; }
-    public string? ErrorMessage { get; }
-
+    public bool IsSuccess { get; } = !string.IsNullOrEmpty(successMessage);
+    public string? SuccessMessage { get; } = successMessage;
+    public string? ErrorMessage { get; } = errorMessage;
 }

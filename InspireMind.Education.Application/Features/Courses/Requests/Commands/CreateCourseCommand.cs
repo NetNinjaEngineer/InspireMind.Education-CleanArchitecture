@@ -5,5 +5,5 @@ using MediatR;
 namespace InspireMind.Education.Application.Features.Courses.Requests.Commands;
 public sealed class CreateCourseCommand : IRequest<Result<CourseForListDto>>
 {
-    public CourseForCreateDto Course { get; set; }
+    public CourseForCreateDto Course { get; set; } = null!;
 }

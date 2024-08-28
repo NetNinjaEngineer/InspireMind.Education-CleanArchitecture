@@ -8,16 +8,12 @@ using SendGrid.Helpers.Mail;
 using System.Net;
 
 namespace InspireMind.Education.Identity.Services;
-public class EmailService : BaseResponseHandler, IEmailsService
+public class EmailService(
+    IStringLocalizer<BaseResponseHandler> localizer,
+    IOptions<SendGridSettings> sendGridSettings)
+    : BaseResponseHandler(localizer), IEmailsService
 {
-    private readonly SendGridSettings _sendGridSettings;
-
-    public EmailService(
-        IStringLocalizer<BaseResponseHandler> localizer,
-        IOptions<SendGridSettings> sendGridSettings) : base(localizer)
-    {
-        _sendGridSettings = sendGridSettings.Value;
-    }
+    private readonly SendGridSettings _sendGridSettings = sendGridSettings.Value;
 
     public async Task<Result<bool>> SendEmail(Email emailMessage)
     {

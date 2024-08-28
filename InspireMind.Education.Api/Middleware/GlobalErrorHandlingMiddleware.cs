@@ -1,13 +1,12 @@
 ﻿using FluentValidation;
 using InspireMind.Education.Application.Exceptions;
-using InspireMind.Education.Application.Wrappers;
 using Microsoft.Extensions.Localization;
 using System.Net;
 using System.Text.Json;
 
 namespace InspireMind.Education.Api.Middleware;
 
-public class GlobalErrorHandlingMiddleware(RequestDelegate next,
+internal class GlobalErrorHandlingMiddleware(RequestDelegate next,
                                            ILogger<GlobalErrorHandlingMiddleware> logger,
                                            IStringLocalizer<GlobalErrorHandlingMiddleware> localizer)
 {
@@ -27,34 +26,83 @@ public class GlobalErrorHandlingMiddleware(RequestDelegate next,
     {
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-        ErrorDetails errorDetails = default!;
+        ErrorResponse errorResponse;
         switch (ex)
         {
             case ValidationException validationException:
                 context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
                 var errors = validationException.Errors.Select(x => x.ErrorMessage);
-                errorDetails = new((int)HttpStatusCode.UnprocessableEntity, errors, localizer[SharedResourcesKeys.ValidationErrors]);
+                errorResponse = new ErrorResponse(
+                    statusCode: (int)HttpStatusCode.UnprocessableEntity,
+                    errors: errors,
+                    errorDetails: new ErrorDetails(
+                        exceptionType: ex.GetType().Name,
+                        stackTrace: ex.StackTrace,
+                        source: ex.Source
+                    ),
+                    description: localizer["validationErrors"],
+                    timeStamp: DateTime.UtcNow
+                );
                 break;
 
             case NotFoundException:
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                errorDetails = new((int)HttpStatusCode.NotFound, [ex.Message], localizer[SharedResourcesKeys.ResourceNotFound]);
+                errorResponse = new ErrorResponse(
+                    statusCode: (int)HttpStatusCode.NotFound,
+                    errors: [ex.Message],
+                    errorDetails: new ErrorDetails(
+                        exceptionType: ex.GetType().Name,
+                        stackTrace: ex.StackTrace,
+                        source: ex.Source
+                    ),
+                    description: localizer["resourceNotFound"],
+                    timeStamp: DateTime.UtcNow
+                );
                 break;
 
             default:
-                errorDetails = new((int)HttpStatusCode.InternalServerError, [ex.Message]);
-                break;
+                errorResponse = new ErrorResponse(
+                    statusCode: (int)HttpStatusCode.InternalServerError,
+                    errors: [ex.Message],
+                    errorDetails: new ErrorDetails(
+                        exceptionType: ex.GetType().Name,
+                        stackTrace: ex.StackTrace,
+                        source: ex.Source
+                    ),
+                    description: localizer["ServerError"],
+                    timeStamp: DateTime.UtcNow
+                ); break;
         }
 
-        await context.Response.WriteAsync(errorDetails.ToString());
+        await context.Response.WriteAsync(errorResponse.ToString());
     }
 
-    internal sealed class ErrorDetails(int statusCode, IEnumerable<string> errors, string? description = null)
+    private sealed class ErrorDetails(
+        string? exceptionType,
+        string? stackTrace,
+        string? source)
+    {
+        public string? ExceptionType { get; set; } = exceptionType;
+        public string? StackTrace { get; set; } = stackTrace;
+        public string? Source { get; set; } = source;
+    }
+
+    private sealed class ErrorResponse(
+        int statusCode,
+        IEnumerable<string> errors,
+        ErrorDetails errorDetails,
+        string description,
+        DateTime timeStamp)
     {
         public int StatusCode { get; set; } = statusCode;
         public IEnumerable<string> Errors { get; set; } = errors;
-        public string? Description { get; set; } = description;
+        public ErrorDetails ErrorDetails { get; set; } = errorDetails;
+        public string Description { get; set; } = description;
+        public DateTime TimeStamp { get; set; } = timeStamp;
 
-        public override string ToString() => JsonSerializer.Serialize(this, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+        public override string ToString() =>
+            JsonSerializer.Serialize(this,
+                new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
     }
+
 }

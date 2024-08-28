@@ -33,9 +33,9 @@ namespace InspireMind.Education.Api.Controllers
         /// <response code="200">Returns the registration details if successful.</response>
         [HttpPost("register")]
         [ProducesResponseType(typeof(Result<RegisterResult>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<Result<RegisterResult>>> Register([FromBody] RegisterModel request)
+        public async Task<ActionResult<Result<RegisterResult>>> Register([FromBody] RegisterModel model)
         {
-            return CustomResult(await _mediator.Send(new RegisterCommand { RegisterModel = request }));
+            return CustomResult(await _mediator.Send(new RegisterCommand() { RegisterModel = model }));
         }
 
         /// <summary>

@@ -7,7 +7,6 @@ using InspireMind.Education.Application.Features.Courses.Requests.Queries;
 using InspireMind.Education.Application.RequestParams;
 using InspireMind.Education.Application.Wrappers;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -20,7 +19,7 @@ namespace InspireMind.Education.Api.Controllers
     /// This controller provides endpoints for creating, updating, deleting, and retrieving course data.
     /// </remarks>
     [ApiVersion("1.0")]
-    [Authorize]
+    //[Authorize]
     [Route("api/v{version:apiVersion}/courses")]
     [ApiController]
     public class CoursesController : AppControllerBase
@@ -58,10 +57,10 @@ namespace InspireMind.Education.Api.Controllers
         /// <response code="201">Returns the created course.</response>
         [HttpPost]
         [ProducesResponseType(typeof(CourseForListDto), StatusCodes.Status201Created)]
-        public async Task<ActionResult<CourseForListDto>> CreateNewCourse([FromBody] CourseForCreateDto model)
+        public async Task<ActionResult<CourseForListDto>> CreateNewCourse([FromBody] CourseForCreateDto course)
         {
-            var course = await _mediator.Send(new CreateCourseCommand { Course = model });
-            return Accepted(course.Value);
+            var result = await _mediator.Send(new CreateCourseCommand() { Course = course });
+            return Accepted(result.Value);
         }
 
         /// <summary>

@@ -4,15 +4,9 @@ using Newtonsoft.Json;
 
 namespace InspireMind.Education.Api.Middleware.Localization;
 
-public class JsonStringLocalizer : IStringLocalizer
+public class JsonStringLocalizer(IDistributedCache cache) : IStringLocalizer
 {
-    private readonly IDistributedCache _cache;
     private readonly JsonSerializer _serializer = new();
-
-    public JsonStringLocalizer(IDistributedCache cache)
-    {
-        _cache = cache;
-    }
 
     public LocalizedString this[string name]
     {
@@ -62,7 +56,7 @@ public class JsonStringLocalizer : IStringLocalizer
         if (File.Exists(fullFilePath))
         {
             var cacheKey = $"locale_{Thread.CurrentThread.CurrentCulture.Name}_{key}";
-            var cacheValue = _cache.GetString(cacheKey);
+            var cacheValue = cache.GetString(cacheKey);
 
             if (!string.IsNullOrEmpty(cacheValue))
                 return cacheValue;
@@ -70,7 +64,7 @@ public class JsonStringLocalizer : IStringLocalizer
             var result = GetValueFromJSON(key, fullFilePath);
 
             if (!string.IsNullOrEmpty(result))
-                _cache.SetString(cacheKey, result);
+                cache.SetString(cacheKey, result);
 
             return result;
         }

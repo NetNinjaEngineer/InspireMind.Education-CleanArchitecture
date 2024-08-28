@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using InspireMind.Education.Application.Features.Topics.DTOs;
+using InspireMind.Education.Application.Features.Topics.Requests.Commands;
 using InspireMind.Education.Application.Wrappers;
 using Microsoft.Extensions.Localization;
 
 namespace InspireMind.Education.Application.Features.Topics.Validators.Commands
 {
-    public class CreateTopicCommandValidator : AbstractValidator<TopicForCreationDto>
+    public class CreateTopicCommandValidator : AbstractValidator<CreateTopicCommand>
     {
         private readonly IStringLocalizer<CreateTopicCommandValidator> _localizer;
 
@@ -13,10 +13,10 @@ namespace InspireMind.Education.Application.Features.Topics.Validators.Commands
         {
             _localizer = localizer;
 
-            RuleFor(x => x.TopicName)
-                .NotEmpty().WithMessage(string.Format(_localizer[SharedResourcesKeys.NotEmpty], "TopicName"))
-                .NotNull().WithMessage(string.Format(_localizer[SharedResourcesKeys.NotNull], "TopicName"))
-                .MaximumLength(50).WithMessage(string.Format(_localizer[SharedResourcesKeys.MaximumLength50], "TopicName"));
+            RuleFor(x => x.Topic.TopicName)
+                .NotEmpty().WithMessage(_localizer[SharedResourcesKeys.NotEmpty])
+                .NotNull().WithMessage(_localizer[SharedResourcesKeys.NotNull])
+                .MaximumLength(50).WithMessage(_localizer[SharedResourcesKeys.MaximumLength50]);
 
         }
     }

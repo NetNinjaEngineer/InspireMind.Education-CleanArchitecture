@@ -4,11 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace InspireMind.Education.Api.Base;
-public class AppControllerBase : ControllerBase
+public class AppControllerBase(IMediator mediator) : ControllerBase
 {
-    protected readonly IMediator _mediator;
-
-    public AppControllerBase(IMediator mediator) => _mediator = mediator;
+    protected readonly IMediator _mediator = mediator;
 
     #region Actions
 

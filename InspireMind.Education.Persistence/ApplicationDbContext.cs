@@ -2,13 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace InspireMind.Education.Persistence;
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
-
     public DbSet<Topic> Topics { get; set; }
     public DbSet<Course> Courses { get; set; }
     public DbSet<Student> Students { get; set; }

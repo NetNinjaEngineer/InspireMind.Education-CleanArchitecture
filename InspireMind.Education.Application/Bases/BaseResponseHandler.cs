@@ -3,14 +3,9 @@ using System.Net;
 
 namespace InspireMind.Education.Application.Bases;
 
-public class BaseResponseHandler
+public class BaseResponseHandler(IStringLocalizer<BaseResponseHandler> localizer)
 {
-    public readonly IStringLocalizer<BaseResponseHandler> _localizer;
-
-    public BaseResponseHandler(IStringLocalizer<BaseResponseHandler> localizer)
-    {
-        _localizer = localizer;
-    }
+    public readonly IStringLocalizer<BaseResponseHandler> _localizer = localizer;
 
     public Result<T> Deleted<T>()
     {

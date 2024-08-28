@@ -8,15 +8,8 @@ using System.Text;
 
 namespace InspireMind.Education.Application.Attributes;
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-public class DistributedCached : Attribute, IAsyncActionFilter
+public class DistributedCached(int expireTimeInSeconds) : Attribute, IAsyncActionFilter
 {
-    private readonly int _expireTimeInSeconds;
-
-    public DistributedCached(int expireTimeInSeconds)
-    {
-        _expireTimeInSeconds = expireTimeInSeconds;
-    }
-
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         var loggerFactory = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
@@ -44,7 +37,7 @@ public class DistributedCached : Attribute, IAsyncActionFilter
             await cacheService.CacheResponseAsync(
                 cacheKey: CacheKey,
                 response: okObjectResult.Value,
-                expireTime: TimeSpan.FromSeconds(_expireTimeInSeconds)
+                expireTime: TimeSpan.FromSeconds(expireTimeInSeconds)
                 );
 
     }
